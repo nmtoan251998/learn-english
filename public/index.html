@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Firebase Hosting</title>
+
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/5.4.0/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/5.4.0/firebase-auth.js"></script>
+    <script defer src="/__/firebase/5.4.0/firebase-database.js"></script>
+    <script defer src="/__/firebase/5.4.0/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/5.4.0/firebase-storage.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/5.4.0/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/5.4.0/firebase-firestore.js"></script>
+    <!-- initialize the SDK after all desired features are loaded -->
+    <script defer src="/__/firebase/init.js"></script>
+  </head>
+  <body>
+      Word:<br/><input type="text" name="new vocabulary inputed" id="input-vocab" required><br/>
+      Meaning:<br/><input type="text" name="vocabulary meaning" id="input-meaning"><br/>
+      Form:<br/><input type="text" name="vocabulary form" id="input-form" value="Noun">
+      <button id="btn-add">Add</button>
+      <button id="btn-clear-local">Clear</button>
+  
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        /*  Better performance: 
+        1.We need to store the recent count to localStorage if the date does not change to synchronize the database (addDb module)
+          1.1.Due to 1, we have to change the checking existence conditions of a particular word (word -> verb form -> meaning)
+        2.We need to restruct the database structure
+          2.1.We should store data into date/content-x (x is increasing due to the number of inputed time) --> field {word: x, meaning: y} for better performance
+          2.2.We should restruct the data structure again by adding 'verb form' into the database, because we have 
+              a ton of similar vocabulary in English (program (n): chương trình, program (v): lập trình)
+          2.3.Due to the changes in (2.2), we have to build another textBox of which value is verb-form
+        3.Do we have to store the inputed meaning to adminDb? 
+
+        4.NEWEST -> How to write an synchronous CheckExist() 
+        5.Convert textField onto form->input to use 'required' of HTML (Check users to fill out the textfield)
+        6. Write function capitilize word, eg: nguyen minh toan -> Nguyen Minh Toan
+
+        /*Is doing
+        1. Try to write checkForm(form) function to prevent the isolated switch-case function --> donedone
+        2. Try to write data into CheckDb -> array (adj, noun, .....)
+        */
+        
+      
+        /*
+          Add new module : Edit database
+        */
+
+
+        //initialize the firebase var
+        var db = firebase.firestore();
+
+        /*my databases name*/
+        //const testDb = 'TestDb';
+        //const clientDb = 'ClientDb';
+        //const checkDb = 'CheckDb';
+
+        /*variables to get id of HTML elements*/
+        var txtNewVocab = document.getElementById('input-vocab');
+        var txtVocabMeaning =  document.getElementById('input-meaning');
+        var txtVocabForm = document.getElementById('input-form');
+
+        var btnAdd = document.getElementById('btn-add');
+        var btnClearLocal = document.getElementById('btn-clear-local');
+
+        /*receive values of textField*/
+        let word = txtNewVocab.value.trim();
+        let meaning = txtVocabMeaning.value.trim();
+        let form = txtVocabForm.value.trim();
+
+        //add into local storage for the first time
+        const localKey = 'inputCounter';
+        //counter is stored into localStorage
+        let count = 0;
+
+        /*addEventListeners*/
+        btnAdd.addEventListener("click", addNewVocab);
+        btnClearLocal.addEventListener("click", function(){
+          localStorage.setItem(localKey, 0);
+          count = localStorage.getItem(localKey);  
+        });
+
+       
+
+        /*methods're gone here*/
+
+        //add to the database
+        function addNewVocab(){
+          //get the recent date
+          dailyObj = new Date();
+          //receive the recent day-month-year
+          let getDate = dateToString(dailyObj);
+
+          //get the recent count inputed
+          count = localStorage.getItem(localKey);
+          //stored place
+          var anotherVocab = `vocab${count}`;
+
+          /*get database Paths*/
+          //Client database path
+          let clientPath = db.doc('ClientDb/' +getDate +'/' +anotherVocab +'/content');
+          //CheckPath
+          let checkPath = db.doc('CheckDb/vocabForm');
+
+          //check the existence of particular words in the database
+          let checker = false;
+          //variable to compare with the word in the database
+          let checkWord = word.toLowerCase();
+          //variable to get data from the CheckDb
+          let getWord;
+
+          //check the inputed vocabulary form (noun-adjective-adverb-verb)
+          checkPath.get()
+          .then((doc) => {
+            switch(form){
+              case 'Adjective':
+                getWord = doc.data().adjective;
+              break;
+              case 'Adverb':
+                getWord = doc.data().adverb;
+              break;
+              case 'Noun':
+                getWord = doc.data().noun;
+              break;
+              case 'Verb':
+                getWord = doc.data().verb;
+              break;
+              default:
+              break;
+            }
+            // console.log('first line: ' +getWord);
+            return getWord;
+          })
+          // getDataByForm(form)
+          .then((getWord) =>  {
+            console.log('second line: ' +getWord);
+            // console.log('flag in the second line: ' +flag);
+
+            //check the existence in the database
+            //if the word exist, turn flag to false
+            getWord.map((getEach) => {
+              // console.log('getEach values: ' +getEach);
+              if(checkWord === getEach.toLowerCase()){
+                //console.log(getEach);
+                //if the word does exist, turn checker to true
+                checker = true;
+              }
+              // console.log('flag after the second line: ' +checker);
+            });      
+            // console.log('flag after the comparison: ' +checker);
+            return checker;
+          })
+          .then(checker => {
+            if(checker === true) {
+              return alert('this word does exist in your storage, please re-enter new word')
+            }
+            else{
+              //add new data to the db
+              clientPath.set({
+                form: form,
+                meaning: meaning,
+                word: word
+              })
+              .then(function(){
+                alert('Added successfully!');
+                //if successfull added, increase the recent index of data in the database
+                count++;
+                //write it to the localStorage
+                localStorage.setItem(localKey, count);
+              })
+              //add meaning to the TestDb
+              .then(function(){
+                db.collection('TestDb').doc("bank").update({
+                  meaning: firebase.firestore.FieldValue.arrayUnion(meaning)
+                })
+
+                let pushDataToCheckDb = checkPath.child(form);
+                pushDataToCheckDb.push(meaning);
+
+                //clear the textBox after inputed
+                txtNewVocab.value = "";
+                txtVocabMeaning.value = "";
+                txtVocabForm.value = "";
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            } //end of else
+          })
+          .catch(function(error){
+            console.log(error);
+          });
+        }
+
+        //convert date to toString()
+        function dateToString(dailyObj){
+          //get date properties
+          let year = dailyObj.getUTCFullYear(); //get the year from dailyObj
+          let month = dailyObj.getUTCMonth() + 1; //get the month from dailyObj (1-->12)
+          let day = dailyObj.getUTCDate(); //get date from the dailyObj
+          let date = day +"-" +month +"-" +year;
+          //parse date into string
+          toString(date);
+          return date;
+        }
+
+        //get data from the database
+        function getDataByForm(vocabForm){
+          let getData;
+          //checkpath
+          let checkPath = db.doc('CheckDb/vocabForm');
+
+          return new Promise((resolve,reject) => {
+            //check the inputed vocabulary form (noun-adjective-adverb-verb)
+            checkPath.get()
+            .then((doc) => {
+              switch(vocabForm){
+                case 'Adjective':
+                  getData = doc.data().adjective;
+                break;
+                case 'Adverb':
+                  getData = doc.data().adverb;
+                break;
+                case 'Noun':
+                  getData = doc.data().noun;
+                break;
+                case 'Verb':
+                  getData = doc.data().verb;
+                break;
+                default:
+                break;
+              }
+              // console.log(getData);
+              return getData
+            })
+            .then(getData => resolve(getData))
+            .catch(error => console.log(error))
+          })          
+        }
+        // //used for getDataByForm() function
+        // let tenten = Promise.resolve(getDataByForm(form));
+        // tenten.then(resVal => console.log(resVal))
+
+      }); //end of DOM.contentLoaded
+    </script>
+
+  </body>
+</html>
