@@ -166,19 +166,19 @@
                 .then(function(){
                   if(form === 'Adjective')
                     db.collection('CheckDb').doc('vocabForm').update({
-                      adjective: firebase.firestore.FieldValue.arrayUnion(meaning)
+                      adjective: firebase.firestore.FieldValue.arrayUnion(word)
                     });
                   else if(form === 'Adverb')
                     db.collection('CheckDb').doc('vocabForm').update({
-                      adverb: firebase.firestore.FieldValue.arrayUnion(meaning)
+                      adverb: firebase.firestore.FieldValue.arrayUnion(word)
                     });
                   else if(form === 'Noun')
                     db.collection('CheckDb').doc('vocabForm').update({
-                      noun: firebase.firestore.FieldValue.arrayUnion(meaning)
+                      noun: firebase.firestore.FieldValue.arrayUnion(word)
                     });
                   else if(form === 'Verb')
                     db.collection('CheckDb').doc('vocabForm').update({
-                      verb: firebase.firestore.FieldValue.arrayUnion(meaning)
+                      verb: firebase.firestore.FieldValue.arrayUnion(word)
                     });
                 });
               })
@@ -208,7 +208,7 @@
         }
 
         //capitalize word
-        let toUpperEach = (string) => {
+        function toUpperEach(string) {
           return string
             .trim()
             .toLowerCase()
