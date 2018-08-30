@@ -18,11 +18,18 @@
     <script defer src="/__/firebase/init.js"></script>
   </head>
   <body>
+    <h2>Add module</h2>
       Word:<br/><input type="text" name="new vocabulary inputed" id="input-vocab"><br/>
       Meaning:<br/><input type="text" name="vocabulary meaning" id="input-meaning"><br/>
       Form:<br/><input type="text" name="vocabulary form" id="input-form">
       <button id="btn-add">Add</button>
       <button id="btn-clear-local">Clear</button>
+    <h2>Show module</h2>
+      <ol id="my-fucking-list">
+        <!-- <li></li> -->
+      </ol>
+      <button id="btn-show-all">Show All</button>
+
   
     <script>
       document.addEventListener('DOMContentLoaded', function() {
@@ -40,15 +47,18 @@
 
 
 
-        4.NEWEST -> How to write an synchronous CheckExist() 
+        4.NEWEST -> How to write an synchronous CheckExist() --> done. using pronmise
         5.Convert textField onto form->input to use 'required' of HTML (Check users to fill out the textfield)
-        6. Write function capitilize word, eg: nguyen minh toan -> Nguyen Minh Toan
+        6. Write function capitilize word, eg: nguyen minh toan -> Nguyen Minh Toan --> done
+        7. Make ShowAll Module
 
         
 
         //Is doings
-        1. Try to write checkForm(form) function to prevent the isolated switch-case function --> donedone
+        1. Try to write checkForm(form) function to prevent the isolated switch-case function --> done
         2. Try to write data into CheckDb -> array (adj, noun, .....) --> done
+        3.Convert textField onto form->input to use 'required' of HTML (Check users to fill out the textfield) -> waiting
+        4. Make showAll module
         
         
       
@@ -60,13 +70,14 @@
         //initialize the firebase var
         var db = firebase.firestore();
 
-        /*variables to get id of HTML elements*/
+        /*get id of HTML elements*/
         var txtNewVocab = document.getElementById('input-vocab');
         var txtVocabMeaning =  document.getElementById('input-meaning');
         var txtVocabForm = document.getElementById('input-form');
 
         var btnAdd = document.getElementById('btn-add');
         var btnClearLocal = document.getElementById('btn-clear-local');
+        var btnShowAll = document.getElementById('btn-show-all');
 
         /*receive values of textField*/
         let word = toUpperEach(txtNewVocab.value);
@@ -84,6 +95,7 @@
           localStorage.setItem(localKey, 0);
           count = localStorage.getItem(localKey);  
         });
+        btnShowAll.addEventListener('click', showAll());
 
 
         //METHODS ARE GONE HERE
@@ -103,6 +115,7 @@
 
           //get the recent count inputed
           count = localStorage.getItem(localKey);
+
           //stored place
           var anotherVocab = `vocab${count}`;
 
@@ -131,7 +144,6 @@
 
             return getWord;
           })
-          // getDataByForm(form)
           .then(getWord =>  {
             //make comparison between recent inputed word - database
             getWord.map(getEach => {
@@ -143,6 +155,7 @@
             return checker;
           })
           .then(checker => {
+            //if the checker is true, users cannot input the word 
             if(checker === true) {
               return alert('this word does exist in your storage, please re-enter new word');
             }
@@ -160,10 +173,12 @@
                 //write it to the localStorage
                 localStorage.setItem(localKey, count);
 
+                //update the data in TestDb
                 db.collection('TestDb').doc("bank").update({
                   meaning: firebase.firestore.FieldValue.arrayUnion(meaning)
                 })
                 .then(function(){
+                  //update the CheckDb with new word
                   if(form === 'Adjective')
                     db.collection('CheckDb').doc('vocabForm').update({
                       adjective: firebase.firestore.FieldValue.arrayUnion(word)
@@ -182,7 +197,6 @@
                     });
                 });
               })
-              //add meaning to the TestDb
               .then(function(){
                 //clear the textBox after inputed
                 txtNewVocab.value = "";
@@ -216,6 +230,25 @@
             .map(word => word.substr(0,1).toUpperCase() + word.substr(1, word.length))
             .join(' ')
         };
+
+        /*============================================================*/
+        //SHOW MODULE
+
+        let myHTMLList = document.getElementById('my-fucking-list');
+        let myDataList = [];
+
+        function showAll(){
+          db.collection('ClientDb').get()
+            .then(query => {
+              query.forEach(doc => {
+                console.log(`${doc.data().word}`);
+                console.log(`${doc.data().form}`);
+                console.log(`${doc.data().meaning}`);
+              })
+            })
+        }
+
+
 
 
       }); //end of DOM.contentLoaded
