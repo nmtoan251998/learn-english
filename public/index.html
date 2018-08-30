@@ -18,46 +18,47 @@
     <script defer src="/__/firebase/init.js"></script>
   </head>
   <body>
-      Word:<br/><input type="text" name="new vocabulary inputed" id="input-vocab" required><br/>
+      Word:<br/><input type="text" name="new vocabulary inputed" id="input-vocab"><br/>
       Meaning:<br/><input type="text" name="vocabulary meaning" id="input-meaning"><br/>
-      Form:<br/><input type="text" name="vocabulary form" id="input-form" value="Noun">
+      Form:<br/><input type="text" name="vocabulary form" id="input-form">
       <button id="btn-add">Add</button>
       <button id="btn-clear-local">Clear</button>
   
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        /*  Better performance: 
-        1.We need to store the recent count to localStorage if the date does not change to synchronize the database (addDb module)
+        /*
+
+        // Better performance: 
+        1.We need to store the recent count to localStorage if the date does not change to synchronize the database (addDb module) --> done
           1.1.Due to 1, we have to change the checking existence conditions of a particular word (word -> verb form -> meaning)
-        2.We need to restruct the database structure
+        2.We need to restruct the database structure --> done
           2.1.We should store data into date/content-x (x is increasing due to the number of inputed time) --> field {word: x, meaning: y} for better performance
           2.2.We should restruct the data structure again by adding 'verb form' into the database, because we have 
               a ton of similar vocabulary in English (program (n): chương trình, program (v): lập trình)
           2.3.Due to the changes in (2.2), we have to build another textBox of which value is verb-form
-        3.Do we have to store the inputed meaning to adminDb? 
+        3.Do we have to store the inputed meaning to adminDb? --> done 
+
+
 
         4.NEWEST -> How to write an synchronous CheckExist() 
         5.Convert textField onto form->input to use 'required' of HTML (Check users to fill out the textfield)
         6. Write function capitilize word, eg: nguyen minh toan -> Nguyen Minh Toan
 
-        /*Is doing
+        
+
+        //Is doings
         1. Try to write checkForm(form) function to prevent the isolated switch-case function --> donedone
-        2. Try to write data into CheckDb -> array (adj, noun, .....)
-        */
+        2. Try to write data into CheckDb -> array (adj, noun, .....) --> done
+        
         
       
-        /*
-          Add new module : Edit database
-        */
+       
+        
 
-
+        ====================================================================  */
+        
         //initialize the firebase var
         var db = firebase.firestore();
-
-        /*my databases name*/
-        //const testDb = 'TestDb';
-        //const clientDb = 'ClientDb';
-        //const checkDb = 'CheckDb';
 
         /*variables to get id of HTML elements*/
         var txtNewVocab = document.getElementById('input-vocab');
@@ -84,12 +85,17 @@
           count = localStorage.getItem(localKey);  
         });
 
-       
 
-        /*methods're gone here*/
+        //METHODS ARE GONE HERE
+        /*====================================================================*/
 
         //add to the database
         function addNewVocab(){
+          /*receive values of textField*/
+          let word = txtNewVocab.value.trim();
+          let meaning = txtVocabMeaning.value.trim();
+          let form = txtVocabForm.value.trim();
+
           //get the recent date
           dailyObj = new Date();
           //receive the recent day-month-year
@@ -115,48 +121,32 @@
 
           //check the inputed vocabulary form (noun-adjective-adverb-verb)
           checkPath.get()
-          .then((doc) => {
-            switch(form){
-              case 'Adjective':
-                getWord = doc.data().adjective;
-              break;
-              case 'Adverb':
-                getWord = doc.data().adverb;
-              break;
-              case 'Noun':
-                getWord = doc.data().noun;
-              break;
-              case 'Verb':
-                getWord = doc.data().verb;
-              break;
-              default:
-              break;
-            }
-            // console.log('first line: ' +getWord);
+          .then(doc => {
+            if(form === 'Adjective')
+              getWord = doc.data().adjective;
+            else if(form === 'Adverb')
+              getWord = doc.data().adverb;
+            else if(form === 'Noun')
+              getWord = doc.data().noun;
+            else if(form === 'Verb')
+              getWord = doc.data().verb;
+
             return getWord;
           })
           // getDataByForm(form)
-          .then((getWord) =>  {
-            console.log('second line: ' +getWord);
-            // console.log('flag in the second line: ' +flag);
-
-            //check the existence in the database
-            //if the word exist, turn flag to false
-            getWord.map((getEach) => {
-              // console.log('getEach values: ' +getEach);
+          .then(getWord =>  {
+            //make comparison between recent inputed word - database
+            getWord.map(getEach => {
               if(checkWord === getEach.toLowerCase()){
-                //console.log(getEach);
                 //if the word does exist, turn checker to true
                 checker = true;
               }
-              // console.log('flag after the second line: ' +checker);
             });      
-            // console.log('flag after the comparison: ' +checker);
             return checker;
           })
           .then(checker => {
             if(checker === true) {
-              return alert('this word does exist in your storage, please re-enter new word')
+              return alert('this word does exist in your storage, please re-enter new word');
             }
             else{
               //add new data to the db
@@ -171,29 +161,40 @@
                 count++;
                 //write it to the localStorage
                 localStorage.setItem(localKey, count);
-              })
-              //add meaning to the TestDb
-              .then(function(){
+
                 db.collection('TestDb').doc("bank").update({
                   meaning: firebase.firestore.FieldValue.arrayUnion(meaning)
                 })
-
-                let pushDataToCheckDb = checkPath.child(form);
-                pushDataToCheckDb.push(meaning);
-
+                .then(function(){
+                  if(form === 'Adjective')
+                    db.collection('CheckDb').doc('vocabForm').update({
+                      adjective: firebase.firestore.FieldValue.arrayUnion(meaning)
+                    });
+                  else if(form === 'Adverb')
+                    db.collection('CheckDb').doc('vocabForm').update({
+                      adverb: firebase.firestore.FieldValue.arrayUnion(meaning)
+                    });
+                  else if(form === 'Noun')
+                    db.collection('CheckDb').doc('vocabForm').update({
+                      noun: firebase.firestore.FieldValue.arrayUnion(meaning)
+                    });
+                  else if(form === 'Verb')
+                    db.collection('CheckDb').doc('vocabForm').update({
+                      verb: firebase.firestore.FieldValue.arrayUnion(meaning)
+                    });
+                });
+              })
+              //add meaning to the TestDb
+              .then(function(){
                 //clear the textBox after inputed
                 txtNewVocab.value = "";
                 txtVocabMeaning.value = "";
                 txtVocabForm.value = "";
               })
-              .catch((error) => {
-                console.log(error);
-              });
+              .catch(error => error)
             } //end of else
           })
-          .catch(function(error){
-            console.log(error);
-          });
+          .catch(error => console.log(error))
         }
 
         //convert date to toString()
@@ -208,42 +209,16 @@
           return date;
         }
 
-        //get data from the database
-        function getDataByForm(vocabForm){
-          let getData;
-          //checkpath
-          let checkPath = db.doc('CheckDb/vocabForm');
+        //capitalize word
+        let toUpperEach = (string) => {
+          return string
+            .trim()
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.substr(0,1).toUpperCase() + word.substr(1, word.length))
+            .join(' ')
+        };
 
-          return new Promise((resolve,reject) => {
-            //check the inputed vocabulary form (noun-adjective-adverb-verb)
-            checkPath.get()
-            .then((doc) => {
-              switch(vocabForm){
-                case 'Adjective':
-                  getData = doc.data().adjective;
-                break;
-                case 'Adverb':
-                  getData = doc.data().adverb;
-                break;
-                case 'Noun':
-                  getData = doc.data().noun;
-                break;
-                case 'Verb':
-                  getData = doc.data().verb;
-                break;
-                default:
-                break;
-              }
-              // console.log(getData);
-              return getData
-            })
-            .then(getData => resolve(getData))
-            .catch(error => console.log(error))
-          })          
-        }
-        // //used for getDataByForm() function
-        // let tenten = Promise.resolve(getDataByForm(form));
-        // tenten.then(resVal => console.log(resVal))
 
       }); //end of DOM.contentLoaded
     </script>
