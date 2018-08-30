@@ -1,0 +1,73 @@
+[debug] [2018-08-29T15:33:12.163Z] ----------------------------------------------------------------------
+[debug] [2018-08-29T15:33:12.165Z] Command:       E:\Soft\Nodejs\node.exe C:\Users\Noat\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve
+[debug] [2018-08-29T15:33:12.166Z] CLI Version:   4.0.2
+[debug] [2018-08-29T15:33:12.166Z] Platform:      win32
+[debug] [2018-08-29T15:33:12.166Z] Node Version:  v8.11.3
+[debug] [2018-08-29T15:33:12.166Z] Time:          Wed Aug 29 2018 22:33:12 GMT+0700 (SE Asia Standard Time)
+[debug] [2018-08-29T15:33:12.166Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-08-29T15:33:12.176Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-08-29T15:33:12.176Z] > authorizing via signed-in user
+[debug] [2018-08-29T15:33:12.179Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/learn-english-vocab  
+  
+ Wed Aug 29 2018 22:33:12 GMT+0700 (SE Asia Standard Time)
+[debug] [2018-08-29T15:33:13.319Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-29T15:33:13.320Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/learn-english-vocab/tokens  
+  
+ Wed Aug 29 2018 22:33:13 GMT+0700 (SE Asia Standard Time)
+[debug] [2018-08-29T15:33:14.100Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-29T15:33:14.102Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/learn-english-vocab  
+  
+ Wed Aug 29 2018 22:33:14 GMT+0700 (SE Asia Standard Time)
+[debug] [2018-08-29T15:33:15.227Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'E:\codeweb\learn-english'...
+[info] 
+[debug] [2018-08-29T15:33:15.238Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/700111042043/clients/_:getWebAppConfig  
+  
+ Wed Aug 29 2018 22:33:15 GMT+0700 (SE Asia Standard Time)
+[debug] [2018-08-29T15:33:17.806Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] +  hosting: Local server: http://localhost:5000
+
+[debug] [2018-08-29T17:18:23.207Z] ----------------------------------------------------------------------
+[debug] [2018-08-29T17:18:23.210Z] Command:       E:\Soft\Nodejs\node.exe C:\Users\Noat\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve
+[debug] [2018-08-29T17:18:23.210Z] CLI Version:   4.0.2
+[debug] [2018-08-29T17:18:23.210Z] Platform:      win32
+[debug] [2018-08-29T17:18:23.210Z] Node Version:  v8.11.3
+[debug] [2018-08-29T17:18:23.210Z] Time:          Thu Aug 30 2018 00:18:23 GMT+0700 (SE Asia Standard Time)
+[debug] [2018-08-29T17:18:23.210Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-08-29T17:18:23.279Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-08-29T17:18:23.280Z] > authorizing via signed-in user
+[debug] [2018-08-29T17:18:23.284Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-08-29T17:18:23.285Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token: '1/FfneDhdJtuS1FWnIIoF-hnFKGZ8Umsx03xSz7ed1ZOQ',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Thu Aug 30 2018 00:18:23 GMT+0700 (SE Asia Standard Time)
+[debug] [2018-08-29T17:18:23.747Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-29T17:18:23.814Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/learn-english-vocab  
+  
+ Thu Aug 30 2018 00:18:23 GMT+0700 (SE Asia Standard Time)
+[debug] [2018-08-29T17:18:24.944Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-29T17:18:24.945Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/learn-english-vocab/tokens  
+  
+ Thu Aug 30 2018 00:18:24 GMT+0700 (SE Asia Standard Time)
+[debug] [2018-08-29T17:18:25.816Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-29T17:18:25.818Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/learn-english-vocab  
+  
+ Thu Aug 30 2018 00:18:25 GMT+0700 (SE Asia Standard Time)
+[debug] [2018-08-29T17:18:27.104Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'E:\codeweb\learn-english'...
+[info] 
+[debug] [2018-08-29T17:18:27.109Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/700111042043/clients/_:getWebAppConfig  
+  
+ Thu Aug 30 2018 00:18:27 GMT+0700 (SE Asia Standard Time)
+[debug] [2018-08-29T17:18:28.001Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] +  hosting: Local server: http://localhost:5000
+
