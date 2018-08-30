@@ -69,9 +69,9 @@
         var btnClearLocal = document.getElementById('btn-clear-local');
 
         /*receive values of textField*/
-        let word = txtNewVocab.value.trim();
-        let meaning = txtVocabMeaning.value.trim();
-        let form = txtVocabForm.value.trim();
+        let word = toUpperEach(txtNewVocab.value);
+        let meaning = toUpperEach(txtVocabMeaning.value);
+        let form = toUpperEach(txtVocabForm.value);
 
         //add into local storage for the first time
         const localKey = 'inputCounter';
@@ -92,9 +92,9 @@
         //add to the database
         function addNewVocab(){
           /*receive values of textField*/
-          let word = txtNewVocab.value.trim();
-          let meaning = txtVocabMeaning.value.trim();
-          let form = txtVocabForm.value.trim();
+          let word = toUpperEach(txtNewVocab.value);
+          let meaning = toUpperEach(txtVocabMeaning.value);
+          let form = toUpperEach(txtVocabForm.value);
 
           //get the recent date
           dailyObj = new Date();
@@ -114,8 +114,6 @@
 
           //check the existence of particular words in the database
           let checker = false;
-          //variable to compare with the word in the database
-          let checkWord = word.toLowerCase();
           //variable to get data from the CheckDb
           let getWord;
 
@@ -137,7 +135,7 @@
           .then(getWord =>  {
             //make comparison between recent inputed word - database
             getWord.map(getEach => {
-              if(checkWord === getEach.toLowerCase()){
+              if(word === getEach){
                 //if the word does exist, turn checker to true
                 checker = true;
               }
