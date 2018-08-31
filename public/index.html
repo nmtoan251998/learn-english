@@ -67,7 +67,8 @@
         1. Try to write checkForm(form) function to prevent the isolated switch-case function --> done
         2. Try to write data into CheckDb -> array (adj, noun, .....) --> done
         3.Convert textField onto form->input to use 'required' of HTML (Check users to fill out the textfield) -> waiting
-        4. Make showAll module
+        4. Make showEach module
+        5.  Trying to get subcollection
         
         
       
@@ -108,7 +109,7 @@
           localStorage.setItem(localKey, 0);
           count = localStorage.getItem(localKey);  
         });
-        // btnShowAll.addEventListener('click', showAll);
+        btnShowAll.addEventListener('click', showAll);
         btnShowEach.addEventListener('click', showEach);
 
 
@@ -135,7 +136,7 @@
 
           /*get database Paths*/
           //Client database path
-          let clientPath = db.collection('ClientDb').doc(getDate).collection(anotherVocab).doc('content');
+          let clientPath = db.collection('ClientDb').doc(getDate).collection('content').doc(anotherVocab);
           //CheckPath
           let checkPath = db.doc('CheckDb/vocabForm');
 
@@ -234,7 +235,7 @@
           //get date properties
           let year = dateObj.getFullYear(); //get the year from dailyObj
           let month = dateObj.getMonth() + 1; //get the month from dailyObj (1-->12)
-          let day = dateObj.getDate()-3; //get date from the dailyObj
+          let day = dateObj.getDate(); //get date from the dailyObj
           let date = day +"-" +month +"-" +year;
           //parse date into string
           toString(date);
@@ -259,27 +260,32 @@
         function showEach(){
         //receive the date to show data in that date
         let getDate = dateShowData.value
-        let dateReceiver = "21-8-2018";
+        let dateReceiver = "28-8-2018";
 
-        db.collection('ClientDb').get()
+        db.doc('ClientDb/'+dateReceiver).get()
           .then((doc) => {
-            console.log('length: ' +doc.docs.length);
-            // if(!doc.exists) return alert("You didn't input any shit in this day, you mother fucker");
-            //   console.log(doc.data());
+            // console.log('length: ' +doc.docs.length);
+            if(!doc.exists) return alert("You didn't input any shit in this day, you mother fucker");
+              console.log(doc);
 
           })
           .catch(error => console.log(error))
         }
 
-        // //show all database into website
-        // function showAll(){
+        //show all database into website
+        function showAll(){
 
-        //   db.collection('ClientDb').get()
-        //     .then(query => {
-        //       for(let i = 0; i < query.size; i++)
-        //         console.log(query);
-        //     })
-        // }
+        
+          db.collection('ClientDb').get()
+            .then(snapshot => {
+              let values = snapshot.docs.map(getData => {
+                console.log(getData);
+              });
+
+            })
+
+          
+        }
 
         //render
 
