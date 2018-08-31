@@ -20,8 +20,14 @@
   <body>
     <h2>Add module</h2>
       Word:<br/><input type="text" name="new vocabulary inputed" id="input-vocab"><br/>
-      Meaning:<br/><input type="text" name="vocabulary meaning" id="input-meaning"><br/>
-      Form:<br/><input type="text" name="vocabulary form" id="input-form">
+      Meaning:<br/><input type="text" name="vocabulary meaning" id="input-meaning"><br/><br/>
+      Form<select name="vocabulary form" id="select-form">
+        <option>Choose</option>
+        <option>Adjective</option>
+        <option>Adverb</option>
+        <option>Noun</option>
+        <option>Verb</option>
+      </select>
       <button id="btn-add">Add</button>
       <button id="btn-clear-local">Clear</button>
     <h2>Show module</h2>
@@ -76,7 +82,7 @@
         /*get id of HTML elements*/
         var txtNewVocab = document.getElementById('input-vocab');
         var txtVocabMeaning =  document.getElementById('input-meaning');
-        var txtVocabForm = document.getElementById('input-form');
+        var selectVocabForm = document.getElementById('select-form');
         var dateShowData = document.getElementById('input-get-date');
 
         var btnAdd = document.getElementById('btn-add');
@@ -89,7 +95,7 @@
         /*receive values of textField*/
         let word = toUpperEach(txtNewVocab.value);
         let meaning = toUpperEach(txtVocabMeaning.value);
-        let form = toUpperEach(txtVocabForm.value);
+        let form = toUpperEach(selectVocabForm.value);
 
         //add into local storage for the first time
         const localKey = 'inputCounter';
@@ -114,7 +120,7 @@
           /*receive values of textField*/
           let word = toUpperEach(txtNewVocab.value);
           let meaning = toUpperEach(txtVocabMeaning.value);
-          let form = toUpperEach(txtVocabForm.value);
+          let form = toUpperEach(selectVocabForm.value);
 
           //get the recent date
           dailyObj = new Date();
@@ -228,7 +234,7 @@
           //get date properties
           let year = dateObj.getFullYear(); //get the year from dailyObj
           let month = dateObj.getMonth() + 1; //get the month from dailyObj (1-->12)
-          let day = dateObj.getDate()-10; //get date from the dailyObj
+          let day = dateObj.getDate()-3; //get date from the dailyObj
           let date = day +"-" +month +"-" +year;
           //parse date into string
           toString(date);
