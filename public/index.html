@@ -77,7 +77,7 @@
         var txtNewVocab = document.getElementById('input-vocab');
         var txtVocabMeaning =  document.getElementById('input-meaning');
         var txtVocabForm = document.getElementById('input-form');
-        var dateShowData = document.getElementById('input-date');
+        var dateShowData = document.getElementById('input-get-date');
 
         var btnAdd = document.getElementById('btn-add');
         var btnClearLocal = document.getElementById('btn-clear-local');
@@ -102,8 +102,8 @@
           localStorage.setItem(localKey, 0);
           count = localStorage.getItem(localKey);  
         });
-        // btnShowAll.addEventListener('click', showAll());
-        // btnShowEach.addEventListener('click', showEach());
+        // btnShowAll.addEventListener('click', showAll);
+        btnShowEach.addEventListener('click', showEach);
 
 
         //METHODS ARE GONE HERE
@@ -129,7 +129,7 @@
 
           /*get database Paths*/
           //Client database path
-          let clientPath = db.doc('ClientDb/' +getDate +'/' +anotherVocab +'/content');
+          let clientPath = db.collection('ClientDb').doc(getDate).collection(anotherVocab).doc('content');
           //CheckPath
           let checkPath = db.doc('CheckDb/vocabForm');
 
@@ -169,10 +169,16 @@
             }
             else{
               //add new data to the db
-              clientPath.set({
-                form: form,
-                meaning: meaning,
-                word: word
+              db.doc('ClientDb/' +getDate).set({
+                dummie: 'dummie'
+              })
+              .then(function(){
+                //add new data to the db
+                clientPath.set({
+                  form: form,
+                  meaning: meaning,
+                  word: word
+                });
               })
               .then(function(){
                 alert('Added successfully!');
@@ -218,11 +224,11 @@
         }
 
         //convert date to toString()
-        function dateToString(dailyObj){
+        function dateToString(dateObj){
           //get date properties
-          let year = dailyObj.getFullYear(); //get the year from dailyObj
-          let month = dailyObj.getMonth() + 1; //get the month from dailyObj (1-->12)
-          let day = dailyObj.getDate(); //get date from the dailyObj
+          let year = dateObj.getFullYear(); //get the year from dailyObj
+          let month = dateObj.getMonth() + 1; //get the month from dailyObj (1-->12)
+          let day = dateObj.getDate()-10; //get date from the dailyObj
           let date = day +"-" +month +"-" +year;
           //parse date into string
           toString(date);
@@ -241,33 +247,31 @@
 
         /*============================================================*/
         //SHOW MODULE
-        // let myDataList = [];
+        let myDataList = [];
 
-        // //receive the date to show data in that date
-        // let dateReceiver = dateToString(dateShowData.value);
+        //show data by date
+        function showEach(){
+        //receive the date to show data in that date
+        let getDate = dateShowData.value
+        let dateReceiver = "21-8-2018";
 
-        // //show data by date
-        // function showEach(){
+        db.collection('ClientDb').get()
+          .then((doc) => {
+            console.log('length: ' +doc.docs.length);
+            // if(!doc.exists) return alert("You didn't input any shit in this day, you mother fucker");
+            //   console.log(doc.data());
 
-        // db.collection('ClientDb/' +dateReceiver).get()
-        //   .then(doc => {
-        //     if(!doc.exists) return alert("You didn't input any shit in this day, you mother fucker");
-        //       alert('shit, okkk')
-        //   })
-        //   .catch(error => console.log(error))
-        // }
+          })
+          .catch(error => console.log(error))
+        }
 
-        //show all database into website
+        // //show all database into website
         // function showAll(){
+
         //   db.collection('ClientDb').get()
         //     .then(query => {
-        //       if(query.exists) console.log('exist');
-        //         console.log('does not exist');
-        //       query.forEach(doc => {
-        //         console.log(`${doc.data().word}`);
-        //         console.log(`${doc.data().form}`);
-        //         console.log(`${doc.data().meaning}`);
-        //       })
+        //       for(let i = 0; i < query.size; i++)
+        //         console.log(query);
         //     })
         // }
 
