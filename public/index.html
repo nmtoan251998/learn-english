@@ -20,18 +20,28 @@
   <body>
     <h2>Add module</h2>
       Word:<br/><input type="text" name="new vocabulary inputed" id="input-vocab"><br/>
-      Meaning:<br/><input type="text" name="vocabulary meaning" id="input-meaning"><br/>
-      Form:<br/><input type="text" name="vocabulary form" id="input-form">
+      Meaning:<br/><input type="text" name="vocabulary meaning" id="input-meaning"><br/><br/>
+      Form<select name="vocabulary form" id="select-form">
+        <option>Choose</option>
+        <option>Adjective</option>
+        <option>Adverb</option>
+        <option>Noun</option>
+        <option>Verb</option>
+      </select>
       <button id="btn-add">Add</button>
       <button id="btn-clear-local">Clear</button>
     <h2>Show module</h2>
-      <ol id="my-fucking-list">
+      <br/>Pick a date<br/>
+      <input type="date" name="showdata-date" id="input-get-date" data-date="" data-date-format="DD/MM/YYYY"><br/><br/>
+      <button id="btn-show-each">Show</button>
+      <ol id="my-fucking-each-list">
         <!-- <li></li> -->
       </ol>
-      <button id="btn-show-all">Show All</button><br/><br/>
-      <br/>Pick a date<br/>
-      <input type="date" name="showdata-date" id="input-get-date" data-date="" data-date-format="DD/MM/YYYY"><br/>
-      <button id="btn-show-each">Show</button>
+      <button id="btn-show-all">Show All</button>
+      <ol id="my-fucking-all-list">
+        <!-- <li></li> -->
+      </ol>
+      
 
   
     <script>
@@ -61,7 +71,8 @@
         1. Try to write checkForm(form) function to prevent the isolated switch-case function --> done
         2. Try to write data into CheckDb -> array (adj, noun, .....) --> done
         3.Convert textField onto form->input to use 'required' of HTML (Check users to fill out the textfield) -> waiting
-        4. Make showAll module
+        4. Make showEach module
+        5.  Trying to get subcollection
         
         
       
@@ -76,7 +87,7 @@
         /*get id of HTML elements*/
         var txtNewVocab = document.getElementById('input-vocab');
         var txtVocabMeaning =  document.getElementById('input-meaning');
-        var txtVocabForm = document.getElementById('input-form');
+        var selectVocabForm = document.getElementById('select-form');
         var dateShowData = document.getElementById('input-get-date');
 
         var btnAdd = document.getElementById('btn-add');
@@ -84,12 +95,13 @@
         var btnShowAll = document.getElementById('btn-show-all');
         var btnShowEach = document.getElementById('btn-show-each');
 
-        var myHTMLList = document.getElementById('my-fucking-list');
+        var myHTMLAllList = document.getElementById('my-fucking-all-list');
+        var myHTMLEachList = document.getElementById('my-fucking-each-list');
 
         /*receive values of textField*/
         let word = toUpperEach(txtNewVocab.value);
         let meaning = toUpperEach(txtVocabMeaning.value);
-        let form = toUpperEach(txtVocabForm.value);
+        let form = toUpperEach(selectVocabForm.value);
 
         //add into local storage for the first time
         const localKey = 'inputCounter';
@@ -102,7 +114,7 @@
           localStorage.setItem(localKey, 0);
           count = localStorage.getItem(localKey);  
         });
-        // btnShowAll.addEventListener('click', showAll);
+        btnShowAll.addEventListener('click', showAll);
         btnShowEach.addEventListener('click', showEach);
 
 
@@ -114,7 +126,7 @@
           /*receive values of textField*/
           let word = toUpperEach(txtNewVocab.value);
           let meaning = toUpperEach(txtVocabMeaning.value);
-          let form = toUpperEach(txtVocabForm.value);
+          let form = toUpperEach(selectVocabForm.value);
 
           //get the recent date
           dailyObj = new Date();
@@ -129,7 +141,7 @@
 
           /*get database Paths*/
           //Client database path
-          let clientPath = db.collection('ClientDb').doc(getDate).collection(anotherVocab).doc('content');
+          let clientPath = db.collection('ClientDb').doc(getDate).collection('content').doc(anotherVocab);
           //CheckPath
           let checkPath = db.doc('CheckDb/vocabForm');
 
@@ -187,7 +199,7 @@
                 //write it to the localStorage
                 localStorage.setItem(localKey, count);
 
-                //update the data in TestDb
+                //update the data in TestDb 
                 db.collection('TestDb').doc("bank").update({
                   meaning: firebase.firestore.FieldValue.arrayUnion(meaning)
                 })
@@ -228,7 +240,7 @@
           //get date properties
           let year = dateObj.getFullYear(); //get the year from dailyObj
           let month = dateObj.getMonth() + 1; //get the month from dailyObj (1-->12)
-          let day = dateObj.getDate()-10; //get date from the dailyObj
+          let day = dateObj.getDate(); //get date from the dailyObj
           let date = day +"-" +month +"-" +year;
           //parse date into string
           toString(date);
@@ -247,36 +259,56 @@
 
         /*============================================================*/
         //SHOW MODULE
-        let myDataList = [];
 
         //show data by date
         function showEach(){
         //receive the date to show data in that date
         let getDate = dateShowData.value
-        let dateReceiver = "21-8-2018";
+        let dateReceiver = "28-8-2018";
 
-        db.collection('ClientDb').get()
+        db.doc('ClientDb/'+dateReceiver).get()
           .then((doc) => {
-            console.log('length: ' +doc.docs.length);
-            // if(!doc.exists) return alert("You didn't input any shit in this day, you mother fucker");
-            //   console.log(doc.data());
-
+            if(!doc.exists) 
+              return alert("You didn't input any shit in this day, you mother fucker");
+            //else
+            var myEachList = [];
+            db.collection('ClientDb/'+dateReceiver+'/content/').get()
+              .then(snapshot => {
+                var getData;
+                snapshot.docs.map(mapping => {
+                  myEachList.push(mapping.data());
+                });
+                return myEachList
+              })
+              .then(myEachList => {
+                render(myEachList, myHTMLEachList);
+              })
           })
           .catch(error => console.log(error))
         }
 
-        // //show all database into website
-        // function showAll(){
+        //show all database into website
+        function showAll(){
+          let arrayId = [];
+          db.collection('ClientDb').get()
+            .then(snapshot => {
+              snapshot.docs.map(getId => {
+                arrayId.push(getId)
+              });
 
-        //   db.collection('ClientDb').get()
-        //     .then(query => {
-        //       for(let i = 0; i < query.size; i++)
-        //         console.log(query);
-        //     })
-        // }
+            })
+
+          
+        }
 
         //render
-
+        function render(data, listName){
+          //push data to the list
+          let content = data.map(function(item){
+            return '<li>' +item.word +' (' +item.form +'): ' +item.meaning + '</li>';
+          });
+          listName.innerHTML = content.join('');
+        }
 
 
 
