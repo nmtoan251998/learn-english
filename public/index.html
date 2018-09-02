@@ -31,13 +31,17 @@
       <button id="btn-add">Add</button>
       <button id="btn-clear-local">Clear</button>
     <h2>Show module</h2>
-      <ol id="my-fucking-list">
+      <br/>Pick a date<br/>
+      <input type="date" name="showdata-date" id="input-get-date" data-date="" data-date-format="DD/MM/YYYY"><br/><br/>
+      <button id="btn-show-each">Show</button>
+      <ol id="my-fucking-each-list">
         <!-- <li></li> -->
       </ol>
-      <button id="btn-show-all">Show All</button><br/><br/>
-      <br/>Pick a date<br/>
-      <input type="date" name="showdata-date" id="input-get-date" data-date="" data-date-format="DD/MM/YYYY"><br/>
-      <button id="btn-show-each">Show</button>
+      <button id="btn-show-all">Show All</button>
+      <ol id="my-fucking-all-list">
+        <!-- <li></li> -->
+      </ol>
+      
 
   
     <script>
@@ -91,7 +95,8 @@
         var btnShowAll = document.getElementById('btn-show-all');
         var btnShowEach = document.getElementById('btn-show-each');
 
-        var myHTMLList = document.getElementById('my-fucking-list');
+        var myHTMLAllList = document.getElementById('my-fucking-all-list');
+        var myHTMLEachList = document.getElementById('my-fucking-each-list');
 
         /*receive values of textField*/
         let word = toUpperEach(txtNewVocab.value);
@@ -194,7 +199,7 @@
                 //write it to the localStorage
                 localStorage.setItem(localKey, count);
 
-                //update the data in TestDb
+                //update the data in TestDb 
                 db.collection('TestDb').doc("bank").update({
                   meaning: firebase.firestore.FieldValue.arrayUnion(meaning)
                 })
@@ -254,7 +259,6 @@
 
         /*============================================================*/
         //SHOW MODULE
-        let myDataList = [];
 
         //show data by date
         function showEach(){
@@ -264,22 +268,32 @@
 
         db.doc('ClientDb/'+dateReceiver).get()
           .then((doc) => {
-            // console.log('length: ' +doc.docs.length);
-            if(!doc.exists) return alert("You didn't input any shit in this day, you mother fucker");
-              console.log(doc);
-
+            if(!doc.exists) 
+              return alert("You didn't input any shit in this day, you mother fucker");
+            //else
+            var myEachList = [];
+            db.collection('ClientDb/'+dateReceiver+'/content/').get()
+              .then(snapshot => {
+                var getData;
+                snapshot.docs.map(mapping => {
+                  myEachList.push(mapping.data());
+                });
+                return myEachList
+              })
+              .then(myEachList => {
+                render(myEachList, myHTMLEachList);
+              })
           })
           .catch(error => console.log(error))
         }
 
         //show all database into website
         function showAll(){
-
-        
+          let arrayId = [];
           db.collection('ClientDb').get()
             .then(snapshot => {
-              let values = snapshot.docs.map(getData => {
-                console.log(getData);
+              snapshot.docs.map(getId => {
+                arrayId.push(getId)
               });
 
             })
@@ -288,7 +302,13 @@
         }
 
         //render
-
+        function render(data, listName){
+          //push data to the list
+          let content = data.map(function(item){
+            return '<li>' +item.word +' (' +item.form +'): ' +item.meaning + '</li>';
+          });
+          listName.innerHTML = content.join('');
+        }
 
 
 
