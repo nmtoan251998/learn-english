@@ -44,13 +44,14 @@
       <ol id="my-fucking-all-list">
         <!-- <li></li> -->
       </ol>
+    <h2>Show module</h2>
+      <button id="btn-test">Testing</button>
       
 
   
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         /*
-
         // Better performance: 
         1.We need to store the recent count to localStorage if the date does not change to synchronize the database (addDb module) --> done
           1.1.Due to 1, we have to change the checking existence conditions of a particular word (word -> verb form -> meaning)
@@ -66,7 +67,8 @@
         4.NEWEST -> How to write an synchronous CheckExist() --> done. using pronmise
         5.Convert textField onto form->input to use 'required' of HTML (Check users to fill out the textfield)
         6. Write function capitilize word, eg: nguyen minh toan -> Nguyen Minh Toan --> done
-        7. Make ShowAll Module -> waiting
+        7. Make ShowAll Module -> done
+        8. optimize showAll module
 
         
 
@@ -76,10 +78,10 @@
         3.Convert textField onto form->input to use 'required' of HTML (Check users to fill out the textfield) -> waiting
         4. Make showEach module -> done
         5.  Trying to get subcollection -> done
-        6. convert date picked
+        6. convert date picked -> done
+        7. make array to store TestDb
         
         ====================================================================  */
-        
         //initialize the firebase var
         var db = firebase.firestore();
 
@@ -96,6 +98,7 @@
         var btnClearLocal = document.getElementById('btn-clear-local');
         var btnShowAll = document.getElementById('btn-show-all');
         var btnShowEach = document.getElementById('btn-show-each');
+        var btnTest = document.getElementById('btn-test');
 
         var myHTMLAllList = document.getElementById('my-fucking-all-list');
         var myHTMLEachList = document.getElementById('my-fucking-each-list');
@@ -118,11 +121,10 @@
         });
         btnShowAll.addEventListener('click', showAll);
         btnShowEach.addEventListener('click', showEach);
-
+        btnTest.addEventListener('click', startTesting);
 
         //METHODS ARE GONE HERE
         /*====================================================================*/
-
         //add to the database
         function addNewVocab(){
           /*receive values of textField*/
@@ -163,7 +165,6 @@
               getWord = doc.data().noun;
             else if(form === 'Verb')
               getWord = doc.data().verb;
-
             return getWord;
           })
           .then(getWord =>  {
@@ -201,6 +202,9 @@
                 //write it to the localStorage
                 localStorage.setItem(localKey, count);
 
+                //write new item to testDbStore
+                testDbStore.push(meaning);
+
                 //update the data in TestDb 
                 db.collection('TestDb').doc("bank").update({
                   meaning: firebase.firestore.FieldValue.arrayUnion(meaning)
@@ -237,6 +241,152 @@
           .catch(error => console.log(error))
         }
 
+        /*============================================================*/
+        //SHOW MODULE
+
+        //get data by date
+        function getEach(){
+        //receive the date to show data in that date
+        let getDate = getDateInputed.value;
+        let getMonth = getMonthInputed.value;
+        let getYear = getYearInputed.value;
+        let dateReceiver = getDate +"-" +getMonth +"-" +getYear;
+
+        db.doc('ClientDb/'+dateReceiver).get()
+          .then((doc) => {
+            if(!doc.exists) 
+              return alert("You didn't input any shit in this day, you mother fucker");
+            //else
+            var myEachList = [];
+            db.collection('ClientDb/'+dateReceiver+'/content/').get()
+              .then(snapshot => {
+                snapshot.docs.map(mapping => {
+                  myEachList.push(mapping.data());
+                });
+                return myEachList;
+              })
+              .then(myEachList => {
+                render(myEachList, myHTMLEachList);
+              })
+          })
+          .catch(error => console.log(error))
+        }
+
+        //show data by date
+        function showEach(){
+          getEach();
+          console.log('tentennnnnn');
+        }
+
+        //Stay here for a while
+        // //function to get all data from the database
+        // function getAll(){
+        //   //array to store allList data
+        //   var myAllList = [];  
+        //     db.collection('ClientDb').get()
+        //     .then(snapshot => {
+        //       return new Promise( (resolve, reject) => {
+        //         snapshot.docs.map(getId => {
+        //         db.collection('/ClientDb').doc(getId.id).collection('content').get()
+        //           .then(forEach => {
+        //             forEach.docs.map(mapping => {
+        //               myAllList.push(mapping.data());
+        //             });
+        //             //render() --> n times rendering
+        //             return myAllList
+        //           })
+        //           resolve1 = Promise.resolve(myAllList)
+        //           console.log(resolve1)
+        //           resolve1.then(promiseItem => {
+        //             console.log(promiseItem);
+        //           })
+        //         })
+        //         // console.log(resolve(resolve1))
+        //         resolve(resolve1)
+        //       })
+        //       .then(resolve => {
+        //         // console.log(resolve);
+        //       })
+        //     })
+        //     //wanna render here
+        //     //render......
+        // }
+
+        //function to get all data from the database
+        function getAll(){
+          //array to store allList data
+          var myAllList = [];  
+            db.collection('ClientDb').get()
+            .then(snapshot => {
+              
+                snapshot.docs.map(getId => {
+                db.collection('/ClientDb').doc(getId.id).collection('content').get()
+                  .then(forEach => {
+                    forEach.docs.map(mapping => {
+                      myAllList.push(mapping.data());
+                    });
+                    //render() --> n times rendering
+                    return myAllList
+                  })
+                  .then(myAllList => {
+                    console.log('coconut');
+                    render(myAllList, myHTMLAllList);
+                  })
+                })
+            })
+            .catch(error => console.log(error))
+        }
+
+        //show all database into website
+        function showAll(){
+          getAll();
+          console.log('tentennnnn another time');
+        }
+
+        /*============================================================*/
+        //TEST MODULE
+
+        //TestDb firebase database
+        var testDbStore = [];
+        //function to get TestDb
+        function getTestDb(){
+          db.collection('TestDb').doc('bank').get()
+            .then(doc => {
+              testDbStore.push(doc.data());
+            })
+            .catch(error => console.log(error))
+        }
+
+        //array to get random answer (meaning)
+        let randMeaning = [3];
+
+        //function to get random value from a->b
+        function getRandInt(min, max){
+          min = Math.ceil(min);
+          max = Math.floor(max);
+          return Math.floor(Math.random() * (max-min)) + min;
+        }
+
+        //function to show question
+        function startTesting(){
+          return new Promise((resolve, reject) => {
+            //run getTestDb() to initial get data from TestDb
+            getTestDb();
+          })
+          .then(function(){
+            //get random meaning from testDb
+            for(let i = 0; i < 3; i++){
+              console.log(testDbStore, testDbStore[getRandInt(0, testDbStore.length)], getRandInt(0, testDbStore.length));
+              randMeaning.push(testDbStore[getRandInt(0, testDbStore.length)] );
+              console.log(randMeaning);
+            }  
+          })
+          
+        }
+
+        /*============================================================*/
+        //BETTER PERFORMANCE/BEAUTIES
+
         //convert date to toString()
         function dateToString(dateObj){
           //get date properties
@@ -257,51 +407,6 @@
             .split(' ')
             .map(word => word.substr(0,1).toUpperCase() + word.substr(1, word.length))
             .join(' ')
-        };
-
-        /*============================================================*/
-        //SHOW MODULE
-
-        //show data by date
-        function showEach(){
-        //receive the date to show data in that date
-        let getDate = getDateInputed.value;
-        let getMonth = getMonthInputed.value;
-        let getYear = getYearInputed.value;
-
-        let dateReceiver = getDate +"-" +getMonth +"-" +getYear;
-
-        db.doc('ClientDb/'+dateReceiver).get()
-          .then((doc) => {
-            if(!doc.exists) 
-              return alert("You didn't input any shit in this day, you mother fucker");
-            //else
-            var myEachList = [];
-            db.collection('ClientDb/'+dateReceiver+'/content/').get()
-              .then(snapshot => {
-                var getData;
-                snapshot.docs.map(mapping => {
-                  myEachList.push(mapping.data());
-                });
-                return myEachList
-              })
-              .then(myEachList => {
-                render(myEachList, myHTMLEachList);
-              })
-          })
-          .catch(error => console.log(error))
-        }
-
-        //show all database into website
-        function showAll(){
-          let arrayId = [];
-          db.collection('ClientDb').get()
-            .then(snapshot => {
-              snapshot.docs.map(getId => {
-                arrayId.push(getId)
-              });
-
-            })   
         }
 
         //render
@@ -313,8 +418,7 @@
           listName.innerHTML = content.join('');
         }
 
-        /*============================================================*/
-        //TEST MODULE
+
 
 
       }); //end of DOM.contentLoaded
