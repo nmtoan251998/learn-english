@@ -177,6 +177,13 @@
           return Math.floor(Math.random() * (max-min)) + min;
         }
 
+        //function to change value of option-selected after click Add button
+        function resetInputedContent(){
+          txtNewVocab.value = '';
+          txtVocabMeaning.value = '';
+          txtVocabForm.value= '';
+        }
+
         //SERVER
         /*====================================================================*/
         //GET METHODS
@@ -184,6 +191,8 @@
         getAll();
         //get all TestDb from the very first time
         getTestDb();
+        //if the today document does not exist, reset count === 0
+        resetCounter();
 
         /*====================================================================*/
         //get data by date
@@ -239,6 +248,22 @@
             console.log('done');
           })
           .catch(error => console.log(error))
+        }
+
+        //function to check whether the today document exist or not
+        function resetCounter(){
+          //get the recent date
+          dailyObj = new Date();
+          //receive the recent day-month-year
+          let getDate = dateToString(dailyObj);
+
+          db.collection('CLientDb').doc(getDate).get()
+            .then(doc => {
+              if(!doc.exist){
+                return count = 0;
+              }
+            })
+            .catch(error => console.log(error))
         }
 
         //ACTION METHODS
@@ -349,9 +374,10 @@
               })
               .then(function(){
                 //clear the textBox after inputed
-                txtNewVocab.value = "";
-                txtVocabMeaning.value = "";
-                txtVocabForm.value = "Choose";
+                // txtNewVocab.value = "";
+                // txtVocabMeaning.value = "";
+                // txtVocabForm.text = "Choose";
+                resetInputedContent();
               })
               .catch(error => error)
             } //end of else
