@@ -29,7 +29,6 @@
         <option>Verb</option>
       </select>
       <button id="btn-add">Add</button>
-      <button id="btn-clear-local">Clear</button>
     <h2>Show module</h2>
       <br/>Pick a date<br/>
       <input type="text" name="DD" id="input-get-date" size="1" maxlength="2">
@@ -107,10 +106,6 @@
 
         /*addEventListeners*/
         btnAdd.addEventListener("click", addNewVocab);
-        btnClearLocal.addEventListener("click", function(){
-          localStorage.setItem(localKey, 0);
-          count = localStorage.getItem(localKey);  
-        });
         btnShowAll.addEventListener('click', showAll);
         btnShowEach.addEventListener('click', showEach);
         btnTest.addEventListener('click', startTesting);
@@ -128,8 +123,6 @@
         let meaning = toUpperEach(txtVocabMeaning.value);
         let form = toUpperEach(selectVocabForm.value);
 
-        //add into local storage for the first time
-        const localKey = 'inputCounter';
         //counter is stored into localStorage
         let count = 0;
 
@@ -193,7 +186,6 @@
         getTestDb();
         //if the today document does not exist, reset count === 0
         resetCounter();
-
         /*====================================================================*/
         //get data by date
         function getEach(){
@@ -232,7 +224,7 @@
                   forEach.docs.map(mapping => {
                     myAllList.push(mapping.data());
                   });
-                  console.log('done');
+                  console.log('get ClientDb done');
                 });
               });
           })
@@ -245,7 +237,7 @@
             doc.data().meaning.map(item => {
                 testDbStore.push(item);
             });
-            console.log('done');
+            console.log('get TestDb done');
           })
           .catch(error => console.log(error))
         }
@@ -260,7 +252,8 @@
           db.collection('CLientDb').doc(getDate).get()
             .then(doc => {
               if(!doc.exist){
-                return count = 0;
+                count = 0;
+                return console.log('counter reset done')
               }
             })
             .catch(error => console.log(error))
@@ -279,9 +272,6 @@
           dailyObj = new Date();
           //receive the recent day-month-year
           let getDate = dateToString(dailyObj);
-
-          //get the recent count inputed
-          count = localStorage.getItem(localKey);
 
           //stored place
           var anotherVocab = `vocab${count}`;
@@ -342,11 +332,6 @@
                 alert('Added successfully!');
                 //if successfull added, increase the recent index of data in the database
                 count++;
-                //write it to the localStorage
-                localStorage.setItem(localKey, count);
-
-                //write new item to testDbStore
-                testDbStore.push(meaning);
 
                 //update the data in TestDb 
                 db.collection('TestDb').doc("bank").update({
@@ -374,9 +359,6 @@
               })
               .then(function(){
                 //clear the textBox after inputed
-                // txtNewVocab.value = "";
-                // txtVocabMeaning.value = "";
-                // txtVocabForm.text = "Choose";
                 resetInputedContent();
               })
               .catch(error => error)
@@ -453,12 +435,14 @@
 
           //create a 4-pair checkbox answer
           //how many question there are, the number of run-time are there
-          for(let i = 0; i < quesArray.length; i++){
-            checkboxList[i] = ansArray[i].map(item => {
-              return '<input type="checkbox">' +item
-            })
-            // checkboxList[i].push('<input type="checkbox">' +randAnswer[i])
-          }
+          // for(let i = 0; i < quesArray.length; i++){
+          //   checkboxList[i] = ansArray[i].map(item => {
+          //     return '<input type="checkbox">' +item
+          //   })
+          //   // checkboxList[i].push('<input type="checkbox">' +randAnswer[i])
+          // }
+
+          checkboxList.push('<input type="checkbox">' +ansArray.shift())
 
           //content of the HTML
           let content = [ ];
