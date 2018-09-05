@@ -53,9 +53,7 @@
 
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        
-        /*
-        // Better performance: 
+        /*// Better performance: 
         0.We need to store the recent count to localStorage if the date does not change to synchronize the database (addDb module) --> done
           1.1.Due to 1, we have to change the checking existence conditions of a particular word (word -> verb form -> meaning)
         1.We need to restruct the database structure --> done
@@ -161,8 +159,6 @@
           listName.innerHTML = content.join('');
         }
 
-        
-        
         //function to get random value from a->b
         function getRandInt(min, max){
           min = Math.ceil(min);
@@ -333,6 +329,9 @@
                 //if successfull added, increase the recent index of data in the database
                 count++;
 
+                //push new meaning into the word
+                testDbStore.push(meaning);
+
                 //update the data in TestDb 
                 db.collection('TestDb').doc("bank").update({
                   meaning: firebase.firestore.FieldValue.arrayUnion(meaning)
@@ -396,6 +395,8 @@
         let checkArray = [];
         //array to get random answer (meaning)
         let randAnswer = [];
+        //number of questions
+        let numberOfQuestion = 10;
         
         //function to show question
         function getAnswer(){
@@ -407,7 +408,7 @@
           let getRandomData = getRandInt(0,getClientDbLen);
           //get random index in the randAnswer a rray (length = 3)
           let getRandomIndex = getRandInt(0,3)
-  
+
           if(testDbStore.length === 0)
             alert('Loading data......Wait a second');
           //get random meaning from testDb
@@ -421,7 +422,7 @@
           ansArray.push(randAnswer);
           
           //create the content for the quesArray
-          let quesContent = 'What does ' +myAllList[getRandomData].word + ' mean?<br/>'
+          let quesContent = 'What does "' +myAllList[getRandomData].word + '" mean?<br/>'
           quesArray.push(quesContent);
 
           //push the recent obj to checkArray
@@ -430,39 +431,36 @@
 
         //render question
         function renderQues(){
-          //array to receive and transform answers to checkbox
+          // array to receive and transform answers to checkbox
           let checkboxList = [];
 
           //create a 4-pair checkbox answer
           //how many question there are, the number of run-time are there
-          // for(let i = 0; i < quesArray.length; i++){
-          //   checkboxList[i] = ansArray[i].map(item => {
-          //     return '<input type="checkbox">' +item
-          //   })
-          //   // checkboxList[i].push('<input type="checkbox">' +randAnswer[i])
-          // }
-
-          checkboxList.push('<input type="checkbox">' +ansArray.shift())
-
+          for(let i = 0; i < quesArray.length; i++){
+            checkboxList[i] = ansArray[i].map(item => {
+              return '<input type="checkbox">' +item +'<br/>'
+            }).join(' ') //remove the fucking meaningless comma ',' out of my beautiful data <3 
+          }
+        
           //content of the HTML
-          let content = [ ];
-          //create content
+          let content = [];
+          // create content
           for(let i = 0; i < quesArray.length; i++){
             // console.log(quesArray[i], checkboxList[i])
             content.push('<li>' +quesArray[i] +checkboxList[i] +'</li>');
           }
+          
+
           myHTMLTestList.innerHTML = content.join(' ');
         }
 
         //function to start testing
         function startTesting(){
-          let numberOfQuestion = 2;
           for(let i = 0; i < numberOfQuestion; i++){
             //get answers and questions
             getAnswer();
-            // answerReceiver.push(randAnswer);  
-            renderQues();  
           }
+          renderQues();  
         }
 
       }); //end of DOM.contentLoaded
