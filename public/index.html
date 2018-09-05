@@ -29,58 +29,57 @@
         <option>Verb</option>
       </select>
       <button id="btn-add">Add</button>
-      <button id="btn-clear-local">Clear</button>
     <h2>Show module</h2>
       <br/>Pick a date<br/>
-      <input type="date" name="showdata-date" id="input-get-date" data-date="" data-date-format="DD/MM/YYYY"><br/><br/>
+      <input type="text" name="DD" id="input-get-date" size="1" maxlength="2">
+      <input type="text" name="MM" id="input-get-month" size="1" maxlength="2">
+      <input type="text" name="YYYY" id="input-get-year" size="1" maxlength="4">
       <button id="btn-show-each">Show</button>
       <ol id="my-fucking-each-list">
         <!-- <li></li> -->
       </ol>
+
       <button id="btn-show-all">Show All</button>
       <ol id="my-fucking-all-list">
         <!-- <li></li> -->
       </ol>
-      
+    <h2>Test module</h2>
+      <button id="btn-test">Testing</button>
+      <ol id="my-test-list">
+        <!-- <li>What is the meaning of 'Word'?<br/>
+          <input type="checkbox">A   <input type="checkbox">B   <input type="checkbox">C   <input type="checkbox">D</li> -->
+        
+      </ol>
 
-  
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        /*
-
-        // Better performance: 
-        1.We need to store the recent count to localStorage if the date does not change to synchronize the database (addDb module) --> done
+        /*// Better performance: 
+        0.We need to store the recent count to localStorage if the date does not change to synchronize the database (addDb module) --> done
           1.1.Due to 1, we have to change the checking existence conditions of a particular word (word -> verb form -> meaning)
-        2.We need to restruct the database structure --> done
+        1.We need to restruct the database structure --> done
           2.1.We should store data into date/content-x (x is increasing due to the number of inputed time) --> field {word: x, meaning: y} for better performance
           2.2.We should restruct the data structure again by adding 'verb form' into the database, because we have 
               a ton of similar vocabulary in English (program (n): chương trình, program (v): lập trình)
           2.3.Due to the changes in (2.2), we have to build another textBox of which value is verb-form
-        3.Do we have to store the inputed meaning to adminDb? --> done 
+        2.Do we have to store the inputed meaning to adminDb? --> done 
 
-
-
-        4.NEWEST -> How to write an synchronous CheckExist() --> done. using pronmise
-        5.Convert textField onto form->input to use 'required' of HTML (Check users to fill out the textfield)
-        6. Write function capitilize word, eg: nguyen minh toan -> Nguyen Minh Toan --> done
-        7. Make ShowAll Module
-
+  
+        3. Convert textField onto form->input to use 'required' of HTML (Check users to fill out the textfield) -> waiting
+        4. NEWEST -> How to write an synchronous CheckExist() --> done. using pronmise
+        5. Write function capitilize word, eg: nguyen minh toan -> Nguyen Minh Toan --> done
+        6. optimize showAll module
+        7. Make ShowAll Module -> done
         
-
         //Is doings
         1. Try to write checkForm(form) function to prevent the isolated switch-case function --> done
         2. Try to write data into CheckDb -> array (adj, noun, .....) --> done
-        3.Convert textField onto form->input to use 'required' of HTML (Check users to fill out the textfield) -> waiting
-        4. Make showEach module
-        5.  Trying to get subcollection
+        4. Make showEach module -> done
+        5. Trying to get subcollection -> done
+        6. convert date picked -> done
+        7. make array to store TestDb -> done
+        8. renderQuestion() -> solving the display HTML function*/
         
-        
-      
-       
-        
-
-        ====================================================================  */
-        
+        //====================================================================  
         //initialize the firebase var
         var db = firebase.firestore();
 
@@ -88,39 +87,176 @@
         var txtNewVocab = document.getElementById('input-vocab');
         var txtVocabMeaning =  document.getElementById('input-meaning');
         var selectVocabForm = document.getElementById('select-form');
-        var dateShowData = document.getElementById('input-get-date');
+        
+        var getDateInputed = document.getElementById('input-get-date');
+        var getMonthInputed = document.getElementById('input-get-month');
+        var getYearInputed = document.getElementById('input-get-year');
 
         var btnAdd = document.getElementById('btn-add');
         var btnClearLocal = document.getElementById('btn-clear-local');
         var btnShowAll = document.getElementById('btn-show-all');
         var btnShowEach = document.getElementById('btn-show-each');
+        var btnTest = document.getElementById('btn-test');
 
         var myHTMLAllList = document.getElementById('my-fucking-all-list');
         var myHTMLEachList = document.getElementById('my-fucking-each-list');
+        var myHTMLTestList = document.getElementById('my-test-list');
+
+        /*addEventListeners*/
+        btnAdd.addEventListener("click", addNewVocab);
+        btnShowAll.addEventListener('click', showAll);
+        btnShowEach.addEventListener('click', showEach);
+        btnTest.addEventListener('click', startTesting);
+
+        //localAllList
+        var myAllList = [];  
+        //localEachList
+        var myEachList = [];
+
+        //TestDb firebase database
+        var testDbStore = [];
 
         /*receive values of textField*/
         let word = toUpperEach(txtNewVocab.value);
         let meaning = toUpperEach(txtVocabMeaning.value);
         let form = toUpperEach(selectVocabForm.value);
 
-        //add into local storage for the first time
-        const localKey = 'inputCounter';
         //counter is stored into localStorage
         let count = 0;
 
-        /*addEventListeners*/
-        btnAdd.addEventListener("click", addNewVocab);
-        btnClearLocal.addEventListener("click", function(){
-          localStorage.setItem(localKey, 0);
-          count = localStorage.getItem(localKey);  
-        });
-        btnShowAll.addEventListener('click', showAll);
-        btnShowEach.addEventListener('click', showEach);
-
-
         //METHODS ARE GONE HERE
         /*====================================================================*/
+        //LOCAL
+        /*============================================================*/
+        //convert date to toString()
+        function dateToString(dateObj){
+          //get date properties
+          let year = dateObj.getFullYear(); //get the year from dailyObj
+          let month = dateObj.getMonth() + 1; //get the month from dailyObj (1-->12)
+          let day = dateObj.getDate(); //get date from the dailyObj
+          let date = day +"-" +month +"-" +year;
+          //parse date into string
+          toString(date);
+          return date;
+        }
 
+        //capitalize word
+        function toUpperEach(string) {
+          return string
+            .trim()
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.substr(0,1).toUpperCase() + word.substr(1, word.length))
+            .join(' ')
+        }
+
+        //render
+        function render(data, listName){
+          //push data to the list
+          let content = data.map(function(item){
+            return '<li>' +item.word +' (' +item.form +'): ' +item.meaning + '</li>';
+          });
+          listName.innerHTML = content.join('');
+        }
+
+        //function to get random value from a->b
+        function getRandInt(min, max){
+          min = Math.ceil(min);
+          max = Math.floor(max);
+          return Math.floor(Math.random() * (max-min)) + min;
+        }
+
+        //function to change value of option-selected after click Add button
+        function resetInputedContent(){
+          txtNewVocab.value = '';
+          txtVocabMeaning.value = '';
+          txtVocabForm.value= '';
+        }
+
+        //SERVER
+        /*====================================================================*/
+        //GET METHODS
+        //get all ClientDb from the very first time
+        getAll();
+        //get all TestDb from the very first time
+        getTestDb();
+        //if the today document does not exist, reset count === 0
+        resetCounter();
+        /*====================================================================*/
+        //get data by date
+        function getEach(){
+          //receive the date to show data in that date
+          let getDate = getDateInputed.value;
+          let getMonth = getMonthInputed.value;
+          let getYear = getYearInputed.value;
+          let dateReceiver = getDate +"-" +getMonth +"-" +getYear;
+
+          db.doc('ClientDb/'+dateReceiver).get()
+          .then((doc) => {
+            if(!doc.exists) 
+              return alert("You didn't input any shit in this day, you mother fucker");
+            //else
+            db.collection('ClientDb/'+dateReceiver+'/content/').get()
+              .then(snapshot => {
+                snapshot.docs.map(mapping => {
+                  myEachList.push(mapping.data());
+                });
+                return myEachList;
+              })
+              .then(myEachList => {
+                render(myEachList, myHTMLEachList);
+              })
+          })
+          .catch(error => console.log(error))
+        } 
+
+        //function to get all data from the database
+        function getAll(){
+          db.collection('ClientDb').get()
+          .then(snapshot => {
+              snapshot.docs.map(getId => {
+              db.collection('/ClientDb').doc(getId.id).collection('content').get()
+                .then(forEach => {
+                  forEach.docs.map(mapping => {
+                    myAllList.push(mapping.data());
+                  });
+                  console.log('get ClientDb done');
+                });
+              });
+          })
+          .catch(error => console.log(error))
+        }
+
+        function getTestDb(){
+          db.collection('TestDb').doc('bank').get()
+          .then(doc => {
+            doc.data().meaning.map(item => {
+                testDbStore.push(item);
+            });
+            console.log('get TestDb done');
+          })
+          .catch(error => console.log(error))
+        }
+
+        //function to check whether the today document exist or not
+        function resetCounter(){
+          //get the recent date
+          dailyObj = new Date();
+          //receive the recent day-month-year
+          let getDate = dateToString(dailyObj);
+
+          db.collection('CLientDb').doc(getDate).get()
+            .then(doc => {
+              if(!doc.exist){
+                count = 0;
+                return console.log('counter reset done')
+              }
+            })
+            .catch(error => console.log(error))
+        }
+
+        //ACTION METHODS
+        /*====================================================================*/
         //add to the database
         function addNewVocab(){
           /*receive values of textField*/
@@ -132,9 +268,6 @@
           dailyObj = new Date();
           //receive the recent day-month-year
           let getDate = dateToString(dailyObj);
-
-          //get the recent count inputed
-          count = localStorage.getItem(localKey);
 
           //stored place
           var anotherVocab = `vocab${count}`;
@@ -161,7 +294,6 @@
               getWord = doc.data().noun;
             else if(form === 'Verb')
               getWord = doc.data().verb;
-
             return getWord;
           })
           .then(getWord =>  {
@@ -196,8 +328,9 @@
                 alert('Added successfully!');
                 //if successfull added, increase the recent index of data in the database
                 count++;
-                //write it to the localStorage
-                localStorage.setItem(localKey, count);
+
+                //push new meaning into the word
+                testDbStore.push(meaning);
 
                 //update the data in TestDb 
                 db.collection('TestDb').doc("bank").update({
@@ -225,9 +358,7 @@
               })
               .then(function(){
                 //clear the textBox after inputed
-                txtNewVocab.value = "";
-                txtVocabMeaning.value = "";
-                txtVocabForm.value = "";
+                resetInputedContent();
               })
               .catch(error => error)
             } //end of else
@@ -235,83 +366,102 @@
           .catch(error => console.log(error))
         }
 
-        //convert date to toString()
-        function dateToString(dateObj){
-          //get date properties
-          let year = dateObj.getFullYear(); //get the year from dailyObj
-          let month = dateObj.getMonth() + 1; //get the month from dailyObj (1-->12)
-          let day = dateObj.getDate(); //get date from the dailyObj
-          let date = day +"-" +month +"-" +year;
-          //parse date into string
-          toString(date);
-          return date;
-        }
-
-        //capitalize word
-        function toUpperEach(string) {
-          return string
-            .trim()
-            .toLowerCase()
-            .split(' ')
-            .map(word => word.substr(0,1).toUpperCase() + word.substr(1, word.length))
-            .join(' ')
-        };
-
         /*============================================================*/
         //SHOW MODULE
-
         //show data by date
         function showEach(){
-        //receive the date to show data in that date
-        let getDate = dateShowData.value
-        let dateReceiver = "28-8-2018";
-
-        db.doc('ClientDb/'+dateReceiver).get()
-          .then((doc) => {
-            if(!doc.exists) 
-              return alert("You didn't input any shit in this day, you mother fucker");
-            //else
-            var myEachList = [];
-            db.collection('ClientDb/'+dateReceiver+'/content/').get()
-              .then(snapshot => {
-                var getData;
-                snapshot.docs.map(mapping => {
-                  myEachList.push(mapping.data());
-                });
-                return myEachList
-              })
-              .then(myEachList => {
-                render(myEachList, myHTMLEachList);
-              })
-          })
-          .catch(error => console.log(error))
+          getEach();
+          console.log('tentennnnnn');
         }
 
         //show all database into website
         function showAll(){
-          let arrayId = [];
-          db.collection('ClientDb').get()
-            .then(snapshot => {
-              snapshot.docs.map(getId => {
-                arrayId.push(getId)
-              });
+          if(myAllList.length === 0){
+            alert('Loading data......Wait a sec');
+          }
+          else{
+            render(myAllList, myHTMLAllList);
+          }
+          // console.log('tentennnnn another time');
+        }
 
-            })
+        //TEST MODULE
+        /*============================================================*/
+        //array to get all answers
+        let ansArray = [];
+        //array to get all questions
+        let quesArray = [];
+        //array to check the whether the checked is true or not
+        let checkArray = [];
+        //array to get random answer (meaning)
+        let randAnswer = [];
+        //number of questions
+        let numberOfQuestion = 10;
+        
+        //function to show question
+        function getAnswer(){
+          //re-initialize the randAnswer array
+          randAnswer = [];
+          //get the length of CLientDb
+          let getClientDbLen = myAllList.length;
+          //create a random index to push to displayAnswer array
+          let getRandomData = getRandInt(0,getClientDbLen);
+          //get random index in the randAnswer a rray (length = 3)
+          let getRandomIndex = getRandInt(0,3)
 
+          if(testDbStore.length === 0)
+            alert('Loading data......Wait a second');
+          //get random meaning from testDb
+          for(let i = 0; i < 3; i++){
+            randAnswer.push(testDbStore[getRandInt(0,testDbStore.length)]);
+          }  
+          //give an arbitrary value to the array
+          randAnswer.splice(getRandomIndex, 0, myAllList[getRandomData].meaning);
+
+          //now we have ansArray[n] = [a, b, c, d];
+          ansArray.push(randAnswer);
           
+          //create the content for the quesArray
+          let quesContent = 'What does "' +myAllList[getRandomData].word + '" mean?<br/>'
+          quesArray.push(quesContent);
+
+          //push the recent obj to checkArray
+          checkArray.push(myAllList[getRandomData]);
+        } 
+
+        //render question
+        function renderQues(){
+          // array to receive and transform answers to checkbox
+          let checkboxList = [];
+
+          //create a 4-pair checkbox answer
+          //how many question there are, the number of run-time are there
+          for(let i = 0; i < quesArray.length; i++){
+            checkboxList[i] = ansArray[i].map(item => {
+              return '<input type="checkbox">' +item +'<br/>'
+            }).join(' ') //remove the fucking meaningless comma ',' out of my beautiful data <3 
+          }
+        
+          //content of the HTML
+          let content = [];
+          // create content
+          for(let i = 0; i < quesArray.length; i++){
+            // console.log(quesArray[i], checkboxList[i])
+            content.push('<li>' +quesArray[i] +checkboxList[i] +'</li>');
+          }
+          
+
+          myHTMLTestList.innerHTML = content.join(' ');
         }
 
-        //render
-        function render(data, listName){
-          //push data to the list
-          let content = data.map(function(item){
-            return '<li>' +item.word +' (' +item.form +'): ' +item.meaning + '</li>';
-          });
-          listName.innerHTML = content.join('');
+        //function to start testing
+        function startTesting(){
+          for(let i = 0; i < numberOfQuestion; i++){
+            //get answers and questions
+            getAnswer();
+          }
+          renderQues();  
         }
-
-
-
 
       }); //end of DOM.contentLoaded
     </script>
