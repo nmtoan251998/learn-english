@@ -50,6 +50,8 @@
           <input type="checkbox">A   <input type="checkbox">B   <input type="checkbox">C   <input type="checkbox">D</li> -->
         
       </ol>
+      <button id="btn-submit">Submit</button>
+      <div id="show-point"></div>
 
     <script>
       document.addEventListener('DOMContentLoaded', function() {
@@ -97,6 +99,7 @@
         var btnShowAll = document.getElementById('btn-show-all');
         var btnShowEach = document.getElementById('btn-show-each');
         var btnTest = document.getElementById('btn-test');
+        var btnSubmit = document.getElementById('btn-submit');
 
         var myHTMLAllList = document.getElementById('my-fucking-all-list');
         var myHTMLEachList = document.getElementById('my-fucking-each-list');
@@ -107,6 +110,7 @@
         btnShowAll.addEventListener('click', showAll);
         btnShowEach.addEventListener('click', showEach);
         btnTest.addEventListener('click', startTesting);
+        btnSubmit.addEventListener('click', checkPoint);
 
         //localAllList
         var myAllList = [];  
@@ -382,7 +386,7 @@
           else{
             render(myAllList, myHTMLAllList);
           }
-          // console.log('tentennnnn another time');
+          console.log('tentennnnn another time');
         }
 
         //TEST MODULE
@@ -397,6 +401,8 @@
         let randAnswer = [];
         //number of questions
         let numberOfQuestion = 10;
+        //total point
+        var point = 0;
         
         //function to show question
         function getAnswer(){
@@ -422,7 +428,7 @@
           ansArray.push(randAnswer);
           
           //create the content for the quesArray
-          let quesContent = 'What does "' +myAllList[getRandomData].word + '" mean?<br/>'
+          let quesContent = 'What does "' +myAllList[getRandomData].word +'" (' +myAllList[getRandomData].form  +') mean?<br/>'
           quesArray.push(quesContent);
 
           //push the recent obj to checkArray
@@ -434,24 +440,22 @@
           // array to receive and transform answers to checkbox
           let checkboxList = [];
 
-          //create a 4-pair checkbox answer
-          //how many question there are, the number of run-time are there
+          //create a 4-pair checkbox answer | how many question there are, the number of run-time are there
           for(let i = 0; i < quesArray.length; i++){
-            checkboxList[i] = ansArray[i].map(item => {
-              return '<input type="checkbox">' +item +'<br/>'
+            checkboxList[i] = ansArray[i].map((item,index) => {
+              //type of checkbox
+              //<input type="checkbox" class="checkbox-testing-id value="+item"> item <br/>            
+              return '<input type="checkbox" class="checkbox-testing-'+i  +'"' +'value="' +item +'">' +item +'<br/>'
             }).join(' ') //remove the fucking meaningless comma ',' out of my beautiful data <3 
           }
         
           //content of the HTML
           let content = [];
-          // create content
+          //create content
           for(let i = 0; i < quesArray.length; i++){
-            // console.log(quesArray[i], checkboxList[i])
             content.push('<li>' +quesArray[i] +checkboxList[i] +'</li>');
           }
-          
-
-          myHTMLTestList.innerHTML = content.join(' ');
+          myHTMLTestList.innerHTML = content.join('');
         }
 
         //function to start testing
@@ -463,6 +467,45 @@
           renderQues();  
         }
 
+        //check answers
+        function checkAnswer(){
+          let getClass = [];
+          for(let i = 0; i < numberOfQuestion; i++){
+            // getClass[i] = document.getElementsByClassName("checkbox-testing-"+i);
+            getClass[i] = document.querySelectorAll('.checkbox-testing-'+i);  
+            
+            for(let j = 0; j < 4; j++){
+              //check the checkedButton
+              if(getClass[i][j].checked){
+                //assign value
+                let checkbox = getClass[i][j].value;
+                let checkValue = checkArray[i].meaning;
+                //checking
+                if(checkbox === checkValue){
+                  //increase the point if true
+                  point++;
+                  break;
+                }
+                break;
+              }
+              
+            }                                              
+          }
+        }
+
+        //function to check how many right answers
+        function checkPoint(){
+          checkAnswer();
+
+          //give point to the HTML
+          let element = document.createElement('p');
+          let node = document.createTextNode('Point:'+point+'/10');
+          element.appendChild(node);
+
+          //give point to HTML
+          var appendPoint = document.getElementById('show-point');
+          appendPoint.appendChild(element);
+        }
       }); //end of DOM.contentLoaded
     </script>
 
