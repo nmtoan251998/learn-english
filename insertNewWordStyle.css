@@ -416,6 +416,27 @@ main ul li i{
   box-shadow: 10px 10px 2px rgba(0, 0, 0, 0.3);
 }
 
+.bodyVocabTable ul li {
+  color: #666;
+  list-style: circle;
+ font-size: 20px;
+}
+
+.bodyVocabTable ul {
+  padding: 0;
+  margin: 22px 53px;
+}
+
+.bottomVocabTable a{
+  text-decoration: none;
+  color: #efef;
+  font-size: 20px;
+  opacity: 0.5;
+  position: absolute;
+  top: 20px;
+  right: 50px;
+}
+
 /*--------------------------*/
 
 .headAddTable{
@@ -435,7 +456,7 @@ main ul li i{
 .addWord{
   width: 285px;
   height: 155px;
-  background-color: #fff;
+  background-color: #d4d8dc;
   position: absolute;
   top: 139px;
   left: 950px;
@@ -443,15 +464,10 @@ main ul li i{
   border-bottom: 2px solid #707070;
 }
 
-.addWord:not(#addWordInput):not(span){
-  opacity: 0.8;
-}
-
 .addMeaning{
   width: 285px;
   height: 155px;
-  background-color: #fff;
-  opacity: 0.8;
+  background-color: #d4d8dc;
   position: absolute;
   top: 294px;
   left: 950px;
@@ -459,11 +475,10 @@ main ul li i{
   border-bottom: 2px solid #707070;
 }
 
-.body3{
+.addVerbForm{
   width: 285px;
-  height: 155px;
-  background-color: #fff;
-  opacity: 0.8;
+  height: 190px;
+  background-color: #d4d8dc;
   position: absolute;
   top: 449px;
   left: 950px;
@@ -489,14 +504,6 @@ main ul li i{
 
 /*-------------------------------*/
 
-.addTable #addWordInput{
-  margin: 10px 48px;
-  padding: 12px 15px;
-  border-radius: 5px;
-  border: none;
-  background-color: #333;
-}
-
 .addTable span{
   background-color: #15C62B;
   padding: 6px 16px;
@@ -516,8 +523,17 @@ main ul li i{
   opacity: 1;
 }
 
+.addTable #addWordInput{
+  margin: 10px 48px;
+  padding: 12px 15px;
+  border-radius: 5px;
+  border: none;
+  background-color: #fff;
+  box-shadow: 3px 3px 5px #DB4C63;
+}
+
 #addWordInput:active, #addWordInput:focus{
-  background-color: yellow;
+  /*background-color: yellow;*/
 }
 
 .addTable #addMeaningInput{
@@ -525,9 +541,46 @@ main ul li i{
   padding: 12px 15px;
   border-radius: 5px;
   border: none;
-  background-color: #333;
+  background-color: #fff;
+  box-shadow: 3px 3px 5px #DB4C63;
 }
 
 #addMeaningInput:active, #addMeaningInput:focus{
-  background-color: yellow;
+  /*background-color: yellow;*/
+  border: hidden;
 }
+
+.addTable #addVerbFormInput{
+  margin: 10px 48px;
+  padding: 12px 15px;
+  border-radius: 5px;
+  border: none;
+  background-color: #fff;
+  box-shadow: 3px 3px 5px #DB4C63;
+}
+
+#addVerbFormInput:active, #addVerbFormInput:focus{
+  /*background-color: yellow;*/
+}
+
+.addVerbForm #calendar {
+  text-decoration: none;
+  color: #DB4C63;
+  position: absolute;
+  top: 145px;
+  right: 210px;
+}
+
+.addVerbForm #addBtn {
+  text-decoration: none;
+  color: #fff;
+  position: absolute;
+  top: 143px;
+  right: 29px;
+  padding: 6px 16px;
+  background-color: #DB4C63;
+  border-radius: 20px;
+  font-size: 15px;
+}
+
+
