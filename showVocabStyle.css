@@ -332,33 +332,33 @@ main ul li i{
   z-index: 1;
 }
 
-#option2{
-  background: #eee5e9;
-  top: -281px;
-}
-
-#option2::before{
+#option1::before{
   position: absolute;
   height: 25px;
   width: 37px;
   left: -20px;
-  top: 0px;
+  top: -320px;
   content: "";
-  background-color: #eee5e9;
+  background-color: #f0c828;
   transform: skew(-55deg);
   z-index: -1;
 }
 
-#option2::after{
+#option1::after{
   position: absolute;
   height: 25px;
   width: 37px;
   left: -20px;
-  top: 25px;
+  top: -295px;
   content: "";
-  background-color: #eee5e9;
+  background-color: #f0c828;
   transform: skew(-127deg);
   z-index: -1;
+}
+
+#option2{
+  background: #eee5e9;
+  top: -281px;
 }
 
 .headVocabTable{
@@ -372,6 +372,7 @@ main ul li i{
   top: 79px;
   left: 430px;
   box-shadow: 10px 10px 2px rgba(0, 0, 0, 0.3);
+  text-align: center;
 }
 
 .bottomVocabTable{
@@ -393,17 +394,6 @@ main ul li i{
   font-size: 27px;
   color: #EFEF;
   margin: 14px 44px;
-}
-
-.headVocabTable span{
-  font-size: 20px;
-  margin: 0px 10px;
-  opacity: 0.5;
-}
-
-.headVocabTable span a{
-  text-decoration: none;
-  color: #EFEF;
 }
 
 .bodyVocabTable{
@@ -457,150 +447,126 @@ main ul li i{
   left: 264px;
 }
 
-/*--------------------------*/
+/*---------------------------*/
 
-.headAddTable{
+.headMeaningTable{
   background-color: #DB4C63;
-  width: 285px;
+  width: 250px;
   height: 60px;
   border-top-right-radius: 25px;
   border-top-left-radius: 25px;
   border: 1px solid #DB4C63;
   position: absolute;
-  top: 79px;
-  left: 950px;
+  top: 59px;
+  left: 958px;
   box-shadow: 10px 10px 2px rgba(0, 0, 0, 0.3);
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 22px;
 }
 
-.addWord{
-  width: 285px;
-  height: 155px;
-  background-color: #d4d8dc;
+.bodyMeaningTable{
+  width: 250px;
+  height: 210px;
+  background-color: #fff;
   position: absolute;
-  top: 139px;
-  left: 950px;
-  box-shadow: 10px 10px 2px rgba(0, 0, 0, 0.3);
-  border-bottom: 2px solid #707070;
-}
-
-.addMeaning{
-  width: 285px;
-  height: 155px;
-  background-color: #d4d8dc;
-  position: absolute;
-  top: 294px;
-  left: 950px;
-  box-shadow: 10px 10px 2px rgba(0, 0, 0, 0.3);
-  border-bottom: 2px solid #707070;
-}
-
-.addVerbForm{
-  width: 285px;
-  height: 190px;
-  background-color: #d4d8dc;
-  position: absolute;
-  top: 449px;
-  left: 950px;
+  top: 119px;
+  left: 958px;
   box-shadow: 10px 10px 2px rgba(0, 0, 0, 0.3);
 }
-.headAddTable p{
-  display: inline-block;
-  font-size: 27px;
-  color: #EFEF;
-  margin: 14px 44px;
+
+.bodyMeaningTable .word {
+  display: flex;
+  justify-content: space-between;
+  align-items: space-between;
+  margin: 26px 20px;
 }
 
-.headAddTable span{
+.bodyMeaningTable .word a{
+  color: #333;
+}
+
+.bodyMeaningTable .word #word{
+  color: #04d004;
+  font-weight: bold;
   font-size: 20px;
-  margin: 0px 12px;
-  opacity: 0.5;
+  margin-top: -3px;
 }
 
-.headAddTable span a{
-  text-decoration: none;
-  color: #EFEF;
-}
-
-/*-------------------------------*/
-
-.addTable span{
-  background-color: #15C62B;
-  padding: 6px 16px;
-  display: inline-block;
-  margin: 20px 32px;
-  border-radius: 4px;
-  box-shadow: 2px 2px 6px #15C62B;
-}
-
-.addTable span p{
-  font-size: 13px;
-  margin: 0;
-  color: #fff;
-}
-
-.headVocalTable{
-  opacity: 1;
-}
-
-.addTable #addWordInput{
-  margin: 10px 48px;
-  padding: 12px 15px;
-  border-radius: 5px;
-  border: none;
-  background-color: #fff;
-  box-shadow: 3px 3px 5px #DB4C63;
-}
-
-#addWordInput:active, #addWordInput:focus{
-  /*background-color: yellow;*/
-}
-
-.addTable #addMeaningInput{
-  margin: 10px 48px;
-  padding: 12px 15px;
-  border-radius: 5px;
-  border: none;
-  background-color: #fff;
-  box-shadow: 3px 3px 5px #DB4C63;
-}
-
-#addMeaningInput:active, #addMeaningInput:focus{
-  /*background-color: yellow;*/
-  border: hidden;
-}
-
-.addTable #addVerbFormInput{
-  margin: 10px 48px;
-  padding: 12px 15px;
-  border-radius: 5px;
-  border: none;
-  background-color: #fff;
-  box-shadow: 3px 3px 5px #DB4C63;
-}
-
-#addVerbFormInput:active, #addVerbFormInput:focus{
-  /*background-color: yellow;*/
-}
-
-.addVerbForm #calendar {
-  text-decoration: none;
-  color: #DB4C63;
-  position: absolute;
-  top: 145px;
-  right: 210px;
-}
-
-.addVerbForm #addBtn {
-  text-decoration: none;
-  color: #fff;
-  position: absolute;
-  top: 143px;
-  right: 29px;
-  padding: 6px 16px;
-  background-color: #DB4C63;
-  border-radius: 20px;
+.bodyMeaningTable .word .volume{
   font-size: 15px;
+  font-weight: 1;
+  margin-left: 2px;
+  margin-right: -4px;
 }
 
+.bodyMeaningTable .word .uk{
+  margin-left: 2px;
+}
 
+.bodyMeaningTable .word .fas{
+  font-size: 10px;
+}
+
+.bodyMeaningTable .word #ipa{
+  margin-right: 12px;
+  margin-left: 15px;
+}
+
+.bodyMeaningTable #wordForm{
+  font-weight: bold;
+  color: #000;
+  margin: 26px 20px;
+}
+
+.bodyMeaningTable ul{
+  margin: -20px 35px;
+  padding: 0;
+  list-style: disc;
+}
+
+.bodyMeaningTable ul li {
+  color: #000;
+  font-size: 13px;
+}
+
+.bodyMeaningTable .examples {
+  font-size: 11px;
+  margin: 26px 20px;
+}
+
+.bodyMeaningTable .examples .sample {
+  color: #f5001e;
+}
+
+/*-----------------------------*/
+
+.headIllustrationTable{
+  background-color: #DB4C63;
+  width: 250px;
+  height: 60px;
+  border-top-right-radius: 25px;
+  border-top-left-radius: 25px;
+  border: 1px solid #DB4C63;
+  position: absolute;
+  top: 400px;
+  left: 958px;
+  box-shadow: 10px 10px 2px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 22px;
+}
+
+.bodyIllustrationTable{
+  width: 250px;
+  height: 210px;
+  background-color: #fff;
+  position: absolute;
+  top: 460px;
+  left: 958px;
+  box-shadow: 10px 10px 2px rgba(0, 0, 0, 0.3);
+}

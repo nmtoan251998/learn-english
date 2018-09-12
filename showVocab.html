@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="insertNewWordStyle.css">
+  <link rel="stylesheet" href="showVocabStyle.css">
   <meta name="viewport" content="width=device-widtch, initial-scale=1.0">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
   <title>Daily Engrisk</title>
@@ -40,7 +40,6 @@
     <div class="vocabTable">
       <div class="headVocabTable">
         <p>Vocabulary</p>
-        <span><a href="#">Add...</a></span>
       </div>
       <div class="bodyVocabTable">
         <ul>
@@ -61,30 +60,38 @@
         <a href="#" title="calendar">Today</a>
       </div>
     </div>
-
-    <div class="addTable">
-      <div class="headAddTable">
-        <p>Add</p>
-      </div>
-      <div class="bodyAddTable">
-        <div class="addWord">
-          <span><p>Word</p></span>
-          <input type="text" placeholder="Add word here..." id="addWordInput">
-        </div>
-        <div class="addMeaning">
-          <span><p>Meaning</p></span>
-          <input type="text" placeholder="Add meaning here..." id="addMeaningInput">
-        </div>
-        <div class="addVerbForm">
-          <span><p>Verb Form</p></span>
-          <input type="text" placeholder="Add verb form here..." id="addVerbFormInput">
-          <a href="#" title="Today" id="calendar">Today</a>
-          <a href="#" title="Add" id="addBtn">Add</a>
-        </div>
-      </div>
-
+  <!-- ------------------------------------- -->
+  <div class="meaningTable">
+    <div class="headMeaningTable">
+      Meaning
     </div>
-
+    <div class="bodyMeaningTable">
+      <article class="word volume"> 
+        <span id="word">House</span>
+        <span id="ipa">/haʊs/</span>
+        <a href="#" title=""><i class="fas fa-volume-up" id="US"><span class="volume">US</span></i></a>
+        <a href="#" title=""><i class="fas fa-volume-up uk" id="UK"><span class="volume">UK</span></i></a>
+      </article>
+      <p id="wordForm">Danh từ</p>
+      <ul class="meaning">
+        <li>Ngôi nhà</li>
+      </ul>
+      <article class="examples">
+        <p class="sample exp">Your house is very nice, did you design it by yourself?</p>
+        <p class="sampleTranslated exp">Ngôi nhà của bạn thật đẹp, bạn tự thiết kế nó hả?</p>
+      </article>
+    </div>
+  </div>
+  <!-- -------------------------->
+  <div class="illustrasionTable">
+    <div class="headIllustrationTable">
+      Illustration
+    </div>
+    <div class="bodyIllustrationTable">
+      
+        
+    </div>
+  </div>
   </main>
 
 </body>
