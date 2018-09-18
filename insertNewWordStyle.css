@@ -361,6 +361,13 @@ main ul li i{
   z-index: -1;
 }
 
+.vocabTable{
+  position: relative;
+  background-color: red;
+  left: -370px;
+  top: -215px;
+}
+
 .headVocabTable{
   background-color: #DB4C63;
   width: 320px;
@@ -369,8 +376,8 @@ main ul li i{
   border-top-left-radius: 25px;
   border: 1px solid #DB4C63;
   position: absolute;
-  top: 79px;
-  left: 430px;
+  top: -60px;
+  /*left: 430px;*/
   box-shadow: 10px 10px 2px rgba(0, 0, 0, 0.3);
 }
 
@@ -382,14 +389,14 @@ main ul li i{
   border-bottom-left-radius: 25px;
   border: 1px solid #DB4C63;
   position: absolute;
-  top: 539px;
-  left: 430px;
+  top: 400px;
+  /*left: 430px;*/
   box-shadow: 10px 10px 2px rgba(0, 0, 0, 0.3);
 }
 
 .bottomVocabTable .calendar{
   margin: 15px 20px;
-  visibility: hidden;
+  /*visibility: hidden;*/
 }
 
 .bottomVocabTable a:hover .calendar{
@@ -420,8 +427,8 @@ main ul li i{
   height: 400px;
   background-color: #fff;
   position: absolute;
-  top: 139px;
-  left: 430px;
+  /*top: 139px;*/
+  /*left: 430px;*/
   box-shadow: 10px 10px 2px rgba(0, 0, 0, 0.3);
 }
 
