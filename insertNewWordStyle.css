@@ -396,10 +396,10 @@ main ul li i{
 
 .bottomVocabTable .calendar{
   margin: 15px 20px;
-  /*visibility: hidden;*/
+  visibility: hidden;
 }
 
-.bottomVocabTable a:hover .calendar{
+.bottomVocabTable a:hover ~.calendar{
   visibility: visible;
 }
 
