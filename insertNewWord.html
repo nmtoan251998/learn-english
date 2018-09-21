@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="insertNewWordStyle.css">
+  <meta name="viewport" content="width=device-widtch, initial-scale=1.0">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+  <title>Daily Engrisk</title>
+</head>
+<body>
+  <!-- Aside  -->
+  <aside>
+    <header>
+        <a href="#" title="header">Daily Engrisk</a>
+    </header>
+    <ul>
+      <li id='li-01'><a href="showVocab.html">Show vocabulary list</a></li>
+      <li id='li-02'><a href="#">Insert new vocabulary</a></li>
+      <li id='li-03'><a href="./test.html">Test</a></li>
+      <li id='li-04'><a href="#">Edit my vocab</a></li>
+    </ul>
+    <div class="option" id="option1"></div>
+    <div class="option" id="option2"></div>
+    <div class="option" id="option3"></div>
+    <div class="option" id="option4"></div>
+    <div class="avatar">
+      <img src="image/avatar1.png" alt="userAvatar">
+      <p class="userName">Hong Quang Raem</p>
+    </div>
+    <div class="pain">
+      <div class="painChil pain1"><span>pain</span></div>
+      <div class="painChil pain2"><span>pain</span></div>
+      <div class="painChil pain3"><span>pain</span></div>
+      <div class="painChil pain4"><span>pain</span></div>
+      <div class="painChil pain5"><span>pain</span></div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="vocabTable">
+      <div class="headVocabTable">
+        <p>Vocabulary</p>
+        <span><a href="#">Add...</a></span>
+      </div>
+      <div class="bodyVocabTable">
+        <ul>
+          <li>House (noun)</li>
+          <li>Bicycle (noun)</li>
+          <li>Hot (adj)</li>
+          <li>Play (verb)</li>
+          <li>Go (verb)</li>
+          <li>Box (noun)</li>
+          <li>Bed (noun)</li>
+          <li>Chair (noun)</li>
+          <li>Pillow (noun)</li>
+        </ul>
+        <a href="#"><i class="fas fa-forward" id="fowardIcon"></i></a>
+        <span id="pageNumber">1</span>
+      </div>
+      <div class="bottomVocabTable">
+        <a href="#" title="calendar">Today</a>
+        <section class="calendar">
+          <input type="date" name="calendar" value="calendar" placeholder="" id="calendar">
+        </section>
+        
+      </div>
+    </div>
+
+    <div class="addTable">
+      <div class="headAddTable">
+        <p>Add</p>
+      </div>
+      <div class="bodyAddTable">
+        <div class="addWord">
+          <span><p>Word</p></span>
+          <input type="text" placeholder="Add word here..." id="addWordInput">
+        </div>
+        <div class="addMeaning">
+          <span><p>Meaning</p></span>
+          <input type="text" placeholder="Add meaning here..." id="addMeaningInput">
+        </div>
+        <div class="addVerbForm">
+          <span><p>Verb Form</p></span>
+          <input type="text" placeholder="Add verb form here..." id="addVerbFormInput">
+          <a href="#" title="Today" id="calendar">Today</a>
+          <a href="#" title="Add" id="addBtn">Add</a>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+</body>
+</html>
