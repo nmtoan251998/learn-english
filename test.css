@@ -223,7 +223,7 @@ aside ul #li-04 a{
 }
 
 aside .avatar{
-  margin-top: 45px;
+  margin-top: -188px;
   text-align: center;
 }
 
@@ -242,6 +242,44 @@ aside .avatar p{
   font-weight: bold;
 }
 
+.option{
+  position: relative;
+  width: 0px;
+  height: 51px;
+  left: 208px;
+  z-index: 1;
+}
+
+#option3{
+  background: #eee5e9;
+  top: -281px;
+}
+
+#option3::before{
+  position: absolute;
+  height: 25px;
+  width: 37px;
+  left: -20px;
+  top: 39px;
+  content: "";
+  background-color: #4dcfa5;
+  transform: skew(-55deg);
+  z-index: -1;
+}
+
+#option3::after{
+  position: absolute;
+  height: 25px;
+  width: 37px;
+  left: -20px;
+  top: 64px;
+  content: "";
+  background-color: #4dcfa5;
+  transform: skew(-127deg);
+  z-index: -1;
+}
+
+/*-------------------------------------*/
 
 main{
   float: left;
@@ -423,6 +461,30 @@ main ul li i{
   visibility: hidden;
 }
 
-.typeMenu .dropdownMenu a.fas:hover ~.subMenu {
+.typeMenu .dropdownMenu:hover ~.subMenu {
   visibility: visible;
 }
+
+/*----------------------------*/
+
+.bodyTestTable .question {
+  padding: 75px 110px 0px 110px;
+  font-size: 30px;
+}
+
+.bodyTestTable .answers {
+  padding-left: 100px;
+}
+
+main .testTable .bodyTestTable .answers ul {
+  line-height: 2;
+  text-decoration: none;
+  list-style-type: upper-alpha;
+  color: #000;
+  font-size: 30px;
+}
+
+main ul li{
+  font-size: 20px;
+}
+
